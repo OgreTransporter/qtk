@@ -17,18 +17,17 @@ MainWindow::MainWindow(QWidget * parent) :
   ui->setupUi(this);
 
   // Find all QtkWidgets in this QMainWindow and initialize their scenes.
-  for(const auto widget : ui->qWidget->children()) {
-    auto qtkWidget = dynamic_cast<Qtk::QtkWidget *>(widget);
-    if(qtkWidget != nullptr) {
-      std::string key = qtkWidget->objectName().toStdString();
-      // Initialize each scene into a map if it doesn't exist.
-      if(mScenes[key] == nullptr) {
-        mScenes[key] = new ExampleScene();
-      }
-      // Set the QtkWidget to use the scene associated with this widget.
-      qtkWidget->setScene(mScenes[key]);
+  auto children = ui->centralwidget->findChildren<Qtk::QtkWidget *>();
+  for(const auto qtkWidget : children) {
+    std::string key = qtkWidget->objectName().toStdString();
+    // Initialize each scene into a map if it doesn't exist.
+    if(mScenes[key] == nullptr) {
+      mScenes[key] = new ExampleScene();
     }
+    // Set the QtkWidget to use the scene associated with this widget.
+    qtkWidget->setScene(mScenes[key]);
   }
+  // TODO: Use QPlainTextEdit or similar for debug console
 
   // Set the window icon used for Qtk.
   // TODO: Update this to be something other than kilroy.
