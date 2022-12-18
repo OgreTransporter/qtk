@@ -1,0 +1,8 @@
+#ifndef QTK_RESOURCES_H_IN_H
+#define QTK_RESOURCES_H_IN_H
+
+#define RESOURCES "@CMAKE_SOURCE_DIR@/resources"
+
+#define PATH(a) RESOURCES a
+
+#endif  // QTK_RESOURCES_H_IN_H
