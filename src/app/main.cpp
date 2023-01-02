@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Main program for practice using Qt6 widgets and OpenGL              ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##

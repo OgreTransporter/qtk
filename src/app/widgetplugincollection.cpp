@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Collection of widget plugins for Qt Designer                        ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -13,6 +13,10 @@
 #include "toolbox.h"
 #include "treeview.h"
 #include "widgetplugin.h"
+
+/*******************************************************************************
+ * Constructors, Destructors
+ ******************************************************************************/
 
 WidgetPluginCollection::WidgetPluginCollection(QObject * parent) :
     QObject(parent), m_collectionName("Qtk Widget Collection") {
@@ -28,6 +32,11 @@ WidgetPluginCollection::WidgetPluginCollection(QObject * parent) :
           [](QWidget * parent) { return new Qtk::ToolBox(parent); }),
   };
 }
+
+/*******************************************************************************
+ * Public Methods
+ ******************************************************************************/
+
 QList<QDesignerCustomWidgetInterface *> WidgetPluginCollection::customWidgets()
     const {
   return m_collection;

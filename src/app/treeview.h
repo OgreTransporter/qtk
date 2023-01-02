@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: TreeView plugin for scene hierarchy                                 ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -26,9 +26,17 @@ namespace Qtk {
       Q_OBJECT
 
     public:
+      /*************************************************************************
+       * Constructors / Destructors
+       ************************************************************************/
+
       explicit TreeView(QWidget * parent = nullptr);
 
       ~TreeView();
+
+      /*************************************************************************
+       * Public Methods
+       ************************************************************************/
 
       /**
        * Updates the QTreeWidget with all objects within the scene.
@@ -48,6 +56,10 @@ namespace Qtk {
       void itemFocus(QTreeWidgetItem * item, int column);
 
     private:
+      /*************************************************************************
+       * Private Members
+       ************************************************************************/
+
       Ui::TreeView * ui;
 
       /**

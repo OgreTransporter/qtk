@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Fly camera class from tutorials followed at trentreed.net           ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com	| URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -18,7 +18,7 @@ namespace Qtk {
   class QTKAPI Camera3D {
     public:
       /*************************************************************************
-       * Constants
+       * Static Public Constants
        ************************************************************************/
 
       static const QVector3D LocalForward;
@@ -29,39 +29,56 @@ namespace Qtk {
        * Accessors
        ************************************************************************/
 
+      /**
+       * @return Transform3D associated with this camera.
+       */
       inline Transform3D & getTransform() { return mTransform; }
 
+      /**
+       * @return Current translation of the camera as a QVector3D.
+       */
       [[nodiscard]] inline const QVector3D & getTranslation() const {
         return mTransform.getTranslation();
       }
 
+      /**
+       * @return Current rotation of this camera as a QQuaternion.
+       */
       [[nodiscard]] inline const QQuaternion & getRotation() const {
         return mTransform.getRotation();
       }
 
-      const QMatrix4x4 & toMatrix();
-
-      // Queries
-      [[nodiscard]] inline QVector3D forward() const {
+      /**
+       * @return QVector3D for the forward vector of the camera.
+       */
+      [[nodiscard]] inline QVector3D getForward() const {
         return mTransform.getRotation().rotatedVector(LocalForward);
       }
 
-      [[nodiscard]] inline QVector3D right() const {
+      /**
+       * @return QVector3D for the right vector of the camera.
+       */
+      [[nodiscard]] inline QVector3D getRight() const {
         return mTransform.getRotation().rotatedVector(LocalRight);
       }
 
-      [[nodiscard]] inline QVector3D up() const {
+      /**
+       * @return QVector3D for the up vector of the camera.
+       */
+      [[nodiscard]] inline QVector3D getUp() const {
         return mTransform.getRotation().rotatedVector(LocalUp);
       }
 
-    private:
       /*************************************************************************
-       * Private Members
+       * Public Methods
        ************************************************************************/
 
-      Transform3D mTransform;
-      QMatrix4x4 mWorld;
+      /**
+       * @return World To View matrix for this camera.
+       */
+      const QMatrix4x4 & toMatrix();
 
+    private:
       /*************************************************************************
        * Private Methods
        ************************************************************************/
@@ -70,6 +87,13 @@ namespace Qtk {
       friend QDataStream & operator<<(QDataStream & out, Camera3D & transform);
       friend QDataStream & operator>>(QDataStream & in, Camera3D & transform);
 #endif
+
+      /*************************************************************************
+       * Private Members
+       ************************************************************************/
+
+      Transform3D mTransform;
+      QMatrix4x4 mWorld;
   };
 
 // Qt Streams

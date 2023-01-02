@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Generic Qt Designer widget plugin                                   ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -11,9 +11,13 @@
 #include <QtPlugin>
 #include <utility>
 
-#include "qtk/qtkapi.h"
+#include <qtk/qtkapi.h>
 
 #include "widgetplugin.h"
+
+/*******************************************************************************
+ * Constructors, Destructors
+ ******************************************************************************/
 
 WidgetPlugin::WidgetPlugin(
     QString group, QString class_name, QString include,
@@ -22,21 +26,11 @@ WidgetPlugin::WidgetPlugin(
     m_className(std::move(class_name)), m_includeFile(std::move(include)),
     m_factory(std::move(factory)), m_objectName(class_name) {}
 
-QString WidgetPlugin::toolTip() const {
-  return QStringLiteral("A custom widget tool tip.");
-}
+WidgetPlugin::WidgetPlugin(QObject * parent) : QObject(parent) {}
 
-QString WidgetPlugin::whatsThis() const {
-  return QStringLiteral("Custom widget what's this?");
-}
-
-QIcon WidgetPlugin::icon() const {
-  return Qtk::getIcon();
-}
-
-bool WidgetPlugin::isContainer() const {
-  return true;
-}
+/*******************************************************************************
+ * Public Methods
+ ******************************************************************************/
 
 QString WidgetPlugin::group() const {
   return m_group;
@@ -52,6 +46,22 @@ QString WidgetPlugin::includeFile() const {
 
 QWidget * WidgetPlugin::createWidget(QWidget * parent) {
   return m_factory(parent);
+}
+
+QString WidgetPlugin::toolTip() const {
+  return QStringLiteral("A custom widget tool tip.");
+}
+
+QString WidgetPlugin::whatsThis() const {
+  return QStringLiteral("Custom widget what's this?");
+}
+
+QIcon WidgetPlugin::icon() const {
+  return Qtk::getIcon();
+}
+
+bool WidgetPlugin::isContainer() const {
+  return true;
 }
 
 bool WidgetPlugin::isInitialized() const {

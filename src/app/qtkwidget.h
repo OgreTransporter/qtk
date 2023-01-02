@@ -1,7 +1,7 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
-## About: Main window for Qt6 OpenGL widget application                       ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
+## About: QtkWidget for Qt desktop application                                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
@@ -17,8 +17,8 @@
 #include <QOpenGLWidget>
 #include <QPlainTextEdit>
 
-#include "qtk/qtkapi.h"
-#include "qtk/scene.h"
+#include <qtk/qtkapi.h>
+#include <qtk/scene.h>
 
 namespace Qtk {
   class DebugConsole;
@@ -42,8 +42,7 @@ namespace Qtk {
        *
        * @param parent Pointer to a parent widget for this QtkWidget or nullptr.
        */
-      explicit QtkWidget(QWidget * parent = nullptr) :
-          QtkWidget(parent, "QtkWidget") {}
+      explicit QtkWidget(QWidget * parent = nullptr);
 
       /**
        * Default construct a QtkWidget.
@@ -62,25 +61,17 @@ namespace Qtk {
        */
       QtkWidget(QWidget * parent, const QString & name, Qtk::Scene * scene);
 
-      ~QtkWidget() override;
+      ~QtkWidget();
+
       /*************************************************************************
        * Public Methods
        ************************************************************************/
+
+      /**
+       * Constructs a QAction to hide / show this DebugConsole.
+       * @return QAction to toggle visibility of this DebugConsole.
+       */
       QAction * getActionToggleConsole();
-
-    private:
-      /*************************************************************************
-       * Private Methods
-       ************************************************************************/
-
-      // clang-format off
-    void teardownGL() { /* Nothing to teardown yet... */ }
-      // clang-format on
-
-    public:
-      /*************************************************************************
-       * Public Inherited Virtual Methods
-       ************************************************************************/
 
       /**
        * Called when the widget is first constructed.
@@ -104,24 +95,61 @@ namespace Qtk {
        * Accessors
        ************************************************************************/
 
+      /**
+       * @return The active scene being viewed in this widget.
+       */
       inline Qtk::Scene * getScene() { return mScene; }
 
       /*************************************************************************
        * Setters
        ************************************************************************/
 
+      /**
+       * @param scene The new scene to view.
+       */
       void setScene(Qtk::Scene * scene);
+
     public slots:
+
       /**
        * Toggle visibility of the DebugConsole associated with this QtkWidget.
        */
       void toggleConsole();
 
-    protected slots:
+    signals:
+      /**
+       * Log a message to the DebugConsole associated with this widget.
+       * @param message The message to log.
+       * @param context The context of the log message.
+       */
+      void sendLog(const QString & message, DebugContext context = Status);
+
+    protected:
       /*************************************************************************
-       * Qt Slots
+       * Protected Methods
        ************************************************************************/
 
+      /**
+       * @param event Key press event to update camera input manager.
+       */
+      void keyPressEvent(QKeyEvent * event) override;
+
+      /**
+       * @param event Key release event to update camera input manager.
+       */
+      void keyReleaseEvent(QKeyEvent * event) override;
+
+      /**
+       * @param event Mouse button press event to update camera input manager.
+       */
+      void mousePressEvent(QMouseEvent * event) override;
+
+      /**
+       * @param event Mouse button release event to update camera input manager.
+       */
+      void mouseReleaseEvent(QMouseEvent * event) override;
+
+    protected slots:
       /**
        * Called when the `frameSwapped` signal is caught.
        * See definition of initializeGL()
@@ -137,39 +165,39 @@ namespace Qtk {
        */
       void messageLogged(const QOpenGLDebugMessage & msg);
 #endif
-    public:
-    signals:
-      void sendLog(
-          const QString & message, Qtk::DebugContext context = Qtk::Status);
-
-    protected:
-      /*************************************************************************
-       * Protected Methods
-       ************************************************************************/
-
-      void keyPressEvent(QKeyEvent * event) override;
-      void keyReleaseEvent(QKeyEvent * event) override;
-      void mousePressEvent(QMouseEvent * event) override;
-      void mouseReleaseEvent(QMouseEvent * event) override;
 
     private:
       /*************************************************************************
        * Private Methods
        ************************************************************************/
 
+      /**
+       * Deconstruct any resources we have allocated for this widget.
+       */
+      void teardownGL();
+
+      /**
+       * Callback function to update input for camera controls
+       */
       static void updateCameraInput();
 
 #ifdef QTK_DEBUG
+      /**
+       * Prints OpenGL context information at start of debug session.
+       */
       void printContextInformation();
-      QOpenGLDebugLogger * mDebugLogger;
 #endif
+
       /*************************************************************************
        * Private Members
        ************************************************************************/
 
-      bool mConsoleActive = false;
+#ifdef QTK_DEBUG
+      QOpenGLDebugLogger * mDebugLogger;
+#endif
       Qtk::Scene * mScene;
       Qtk::DebugConsole * mConsole;
+      bool mConsoleActive = false;
   };
 }  // namespace Qtk
 

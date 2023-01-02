@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Classes for managing objects and data within a scene                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -79,24 +79,42 @@ namespace Qtk {
        ************************************************************************/
 
       /**
+       * @return All Qtk::Objects within the scene.
+       *    If any object is invalid, we return an empty vector.
+       */
+      [[nodiscard]] std::vector<Object *> getObjects() const;
+
+      /**
+       * Retrieve and object from the scene by it's objectName.
+       *
+       * @param name The objectName to look for within this scene.
+       * @return The found object or Q_NULLPTR if none found.
+       */
+      [[nodiscard]] Object * getObject(const QString & name);
+
+      /**
        * @return Camera attached to this scene.
        */
-      static Camera3D & getCamera() { return mCamera; }
+      [[nodiscard]] inline static Camera3D & getCamera() { return mCamera; }
 
       /**
        * @return View matrix for the camera attached to this scene.
        */
-      static QMatrix4x4 getViewMatrix() { return mCamera.toMatrix(); }
+      [[nodiscard]] inline static QMatrix4x4 getViewMatrix() {
+        return mCamera.toMatrix();
+      }
 
       /**
        * @return Projection matrix for the current view into the scene.
        */
-      static QMatrix4x4 & getProjectionMatrix() { return mProjection; }
+      [[nodiscard]] inline static QMatrix4x4 & getProjectionMatrix() {
+        return mProjection;
+      }
 
       /**
        * @return The active skybox for this scene.
        */
-      inline Skybox * getSkybox() { return mSkybox; }
+      [[nodiscard]] inline Skybox * getSkybox() { return mSkybox; }
 
       /**
        * @return The name for this scene. This is entirely user defined and not
@@ -119,14 +137,6 @@ namespace Qtk {
         return mModels;
       }
 
-      /**
-       * @return All Qtk::Objects within the scene.
-       *    If any object is invalid, we return an empty vector.
-       */
-      [[nodiscard]] std::vector<Object *> getObjects() const;
-
-      [[nodiscard]] Object * getObject(const QString & name);
-
       /*************************************************************************
        * Setters
        ************************************************************************/
@@ -138,6 +148,13 @@ namespace Qtk {
 
       /**
        * Adds objects to the scene.
+       * This template provides explicit specializations for valid types.
+       * Adding any object other than these types will cause errors.
+       * TODO: Refactor to use Object base class container for scene objects.
+       *
+       * If creating a new object type for a scene, it must inherit Qtk::Object
+       * and provide a specialization for this method.
+       *
        * @param object The new object to add to the scene.
        * @return The object added to the scene.
        */
@@ -149,17 +166,15 @@ namespace Qtk {
       inline void setSceneName(QString name) { mSceneName = std::move(name); }
 
     signals:
+      /**
+       * Signal thrown when the scene is modified by adding or removing objects.
+       * This can be caught by a main application to update any associated data.
+       *
+       * @param sceneName The scene that has been updated.
+       */
       void sceneUpdated(QString sceneName);
 
     private:
-      /*************************************************************************
-       * Private Members
-       ************************************************************************/
-
-      static Camera3D mCamera;
-      static QMatrix4x4 mProjection;
-      bool mInit = false;
-
       /*************************************************************************
        * Private Methods
        ************************************************************************/
@@ -170,10 +185,13 @@ namespace Qtk {
        */
       void privateDraw();
 
-    private:
       /*************************************************************************
        * Private Members
        ************************************************************************/
+
+      static Camera3D mCamera;
+      static QMatrix4x4 mProjection;
+      bool mInit = false;
 
       QString mSceneName;
       /* The skybox for this scene. */

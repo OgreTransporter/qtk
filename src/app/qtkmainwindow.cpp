@@ -1,18 +1,20 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: MainWindow for Qtk application                                      ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
-
-#include <qtk/qtkapi.h>
 
 #include "examplescene.h"
 #include "qtkmainwindow.h"
 #include "ui_qtkmainwindow.h"
 
 MainWindow * MainWindow::mainWindow_ = Q_NULLPTR;
+
+/*******************************************************************************
+ * Constructors / Destructors
+ ******************************************************************************/
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent) {
   ui_ = new Ui::MainWindow;
@@ -47,6 +49,25 @@ MainWindow::~MainWindow() {
   delete ui_;
 }
 
+/*******************************************************************************
+ * Public Methods
+ ******************************************************************************/
+
+MainWindow * MainWindow::getMainWindow() {
+  if(mainWindow_ == Q_NULLPTR) {
+    mainWindow_ = new MainWindow;
+  }
+  return mainWindow_;
+}
+
+Qtk::QtkWidget * MainWindow::getQtkWidget(const QString & name) {
+  if(!views_.count(name)) {
+    return Q_NULLPTR;
+  }
+  return views_[name];
+}
+
 void MainWindow::refreshScene(QString sceneName) {
+  // TODO: Select TreeView using sceneName>
   ui_->qtk__TreeView->updateView(getQtkWidget(sceneName)->getScene());
 }

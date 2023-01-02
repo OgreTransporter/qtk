@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Input class from tutorials followed at trentreed.net                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com	| URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -18,6 +18,13 @@ using namespace Qtk;
 /*******************************************************************************
  * Static Helper Structs
  ******************************************************************************/
+
+ /**
+  * Struct to hold key input state. When a key is pressed we construct this and
+  * store it within a KeyContainer (or ButtonContainer for mouse buttons).
+  *
+  * @tparam T Qt::Key or Qt::MouseButton input type for this instance.
+  */
 template <typename T> struct InputInstance : std::pair<T, Input::InputState> {
     typedef std::pair<T, Input::InputState> base_class;
 
@@ -28,6 +35,7 @@ template <typename T> struct InputInstance : std::pair<T, Input::InputState> {
     inline InputInstance(T value, Input::InputState state) :
         base_class(value, state) {}
 
+    // Allows use of std::find to search for a key's InputInstance
     inline bool operator==(const InputInstance & rhs) const {
       return this->first == rhs.first;
     }
@@ -53,14 +61,44 @@ static QPoint sg_mouseDelta;
  * Static Inline Helper Functions
  ******************************************************************************/
 
+/**
+ * Search for the InputInstance of a key.
+ *
+ * @param value The key to search for.
+ * @return Iterator to the found element or the end iterator if not found.
+ */
 static inline KeyContainer::iterator FindKey(Qt::Key value) {
   return std::find(sg_keyInstances.begin(), sg_keyInstances.end(), value);
 }
 
+/**
+ * Search for the InputInstance of a mouse button.
+ *
+ * @param value The mouse button to search for.
+ * @return Iterator to the found element or the end iterator if not found.
+ */
 static inline ButtonContainer::iterator FindButton(Qt::MouseButton value) {
   return std::find(sg_buttonInstances.begin(), sg_buttonInstances.end(), value);
 }
 
+/**
+ * Check an InputInstance for the InputReleased state.
+ *
+ * @tparam TPair KeyInstance or ButtonInstance
+ * @param instance Instance to check for InputReleased state.
+ * @return True if the InputInstance is in the released state.
+ */
+template <typename TPair>
+static inline bool CheckReleased(const TPair & instance) {
+  return instance.second == Input::InputReleased;
+}
+
+/**
+ * Updates an InputInstance and applies transitions if needed.
+ *
+ * @tparam TPair KeyInstance or ButtonInstance.
+ * @param instance The InputInstance to update.
+ */
 template <typename TPair> static inline void UpdateStates(TPair & instance) {
   switch(instance.second) {
     case Input::InputRegistered:
@@ -77,11 +115,12 @@ template <typename TPair> static inline void UpdateStates(TPair & instance) {
   }
 }
 
-template <typename TPair>
-static inline bool CheckReleased(const TPair & instance) {
-  return instance.second == Input::InputReleased;
-}
-
+/**
+ * Updates InputInstance containers to track input state.
+ *
+ * @tparam Container The type of container, KeyContainer or ButtonContainer.
+ * @param container The InputInstance container to update.
+ */
 template <typename Container> static inline void Update(Container & container) {
   typedef typename Container::iterator Iter;
   typedef typename Container::value_type TPair;
@@ -96,26 +135,8 @@ template <typename Container> static inline void Update(Container & container) {
 }
 
 /*******************************************************************************
- * Input Implementation
+ * Static Public Methods
  ******************************************************************************/
-
-Input::InputState Input::keyState(Qt::Key k) {
-  auto it = FindKey(k);
-  return (it != sg_keyInstances.end()) ? it->second : InputInvalid;
-}
-
-Input::InputState Input::buttonState(Qt::MouseButton k) {
-  auto it = FindButton(k);
-  return (it != sg_buttonInstances.end()) ? it->second : InputInvalid;
-}
-
-QPoint Input::mousePosition() {
-  return QCursor::pos();
-}
-
-QPoint Input::mouseDelta() {
-  return sg_mouseDelta;
-}
 
 void Input::update() {
   // Update Mouse Delta
@@ -159,4 +180,22 @@ void Input::registerMouseRelease(Qt::MouseButton btn) {
 void Input::reset() {
   sg_keyInstances.clear();
   sg_buttonInstances.clear();
+}
+
+Input::InputState Input::keyState(Qt::Key k) {
+  auto it = FindKey(k);
+  return (it != sg_keyInstances.end()) ? it->second : InputInvalid;
+}
+
+Input::InputState Input::buttonState(Qt::MouseButton k) {
+  auto it = FindButton(k);
+  return (it != sg_buttonInstances.end()) ? it->second : InputInvalid;
+}
+
+QPoint Input::mousePosition() {
+  return QCursor::pos();
+}
+
+QPoint Input::mouseDelta() {
+  return sg_mouseDelta;
 }

@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Main window for Qt6 OpenGL widget application                       ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -8,6 +8,7 @@
 #ifndef QTK_QTKAPI_H
 #define QTK_QTKAPI_H
 
+#include <QFile>
 #include <QWidget>
 #include <QtCore/QtGlobal>
 
@@ -41,8 +42,11 @@ namespace Qtk {
     return widget;
   }
 
+  /**
+   * @return Default icon to use for Qtk desktop application.
+   */
   static QIcon getIcon() {
-    return QIcon(":/icon.png");
+    return QIcon(":/icons/resources/icon.png");
   }
 }  // namespace Qtk
 

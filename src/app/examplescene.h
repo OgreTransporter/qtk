@@ -1,7 +1,7 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
-## About: Classes for managing objects and data within a scene                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
+## About: Example Qtk scene                                                   ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
@@ -9,11 +9,7 @@
 #ifndef QTK_EXAMPLE_SCENE_H
 #define QTK_EXAMPLE_SCENE_H
 
-#include <QMatrix4x4>
-
-#include <qtk/camera3d.h>
 #include <qtk/scene.h>
-#include <qtk/skybox.h>
 
 /**
  * Example scene using QtkWidget to render 3D models and simple geometry within
@@ -40,6 +36,7 @@ class ExampleScene : public Qtk::Scene {
      **************************************************************************/
 
     ExampleScene();
+
     ~ExampleScene();
 
     /***************************************************************************
@@ -50,6 +47,7 @@ class ExampleScene : public Qtk::Scene {
      * Initialize objects within the scene
      */
     void init() override;
+
     /**
      * Called when OpenGL repaints the widget.
      */

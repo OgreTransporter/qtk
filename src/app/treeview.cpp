@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: TreeView plugin for scene hierarchy                                 ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -28,8 +28,9 @@ Qtk::TreeView::~TreeView() {
 }
 
 /*******************************************************************************
- * Public Members
+ * Public Methods
  ******************************************************************************/
+
 void Qtk::TreeView::updateView(const Qtk::Scene * scene) {
   ui->treeWidget->clear();
   ui->treeWidget->setColumnCount(1);
@@ -48,9 +49,9 @@ void Qtk::TreeView::itemFocus(QTreeWidgetItem * item, int column) {
   auto & transform = scene->getCamera().getTransform();
   auto object = scene->getObject(name);
   Transform3D * objectTransform;
-  if(object->getType() == Object::MESH) {
+  if(object->getType() == Object::QTK_MESH) {
     objectTransform = &dynamic_cast<MeshRenderer *>(object)->getTransform();
-  } else if(object->getType() == Object::MODEL) {
+  } else if(object->getType() == Object::QTK_MODEL) {
     objectTransform = &dynamic_cast<Model *>(object)->getTransform();
   }
   transform.setTranslation(objectTransform->getTranslation());

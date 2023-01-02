@@ -1,7 +1,7 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
-## About: MainWindow for creating an example Qt application                   ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
+## About: Debug console for qtk views                                         ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
@@ -29,16 +29,5 @@ DebugConsole::DebugConsole(
   auto qtkWidget = dynamic_cast<QtkWidget *>(owner);
   if(qtkWidget) {
     connect(qtkWidget, &QtkWidget::sendLog, this, &DebugConsole::sendLog);
-    sendLog(
-        "Debug console (" + name + ") attached to QtkWidget: '"
-        + qtkWidget->objectName() + "'");
-    sendLog("Test\nLogging\t\n\tStuff", Status);
-    sendLog("Test\nLogging\t\n\tStuff", Debug);
-    sendLog("Test\nLogging\t\n\tStuff", Warn);
-    sendLog("Test\nLogging\t\n\tStuff", Error);
-    sendLog(
-        "Test\nLogging\t\n\tStuff that is really long and will wrap around but "
-        "it might not you don't know until you try",
-        Fatal);
   }
 }

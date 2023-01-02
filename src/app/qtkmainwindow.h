@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: MainWindow for Qtk application                                      ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -40,22 +40,18 @@ class MainWindow : public QMainWindow {
      * @param parent The parent for this QMainWindow
      */
     explicit MainWindow(QWidget * parent = nullptr);
+
     ~MainWindow() override;
 
     /***************************************************************************
-     * Public Static Methods
+     * Public Methods
      **************************************************************************/
 
     /**
      * Allows widgets to retrieve an instance of this root QMainWindow.
      * @return this
      */
-    inline static MainWindow * getMainWindow() {
-      if(mainWindow_ == Q_NULLPTR) {
-        mainWindow_ = new MainWindow;
-      }
-      return mainWindow_;
-    }
+    static MainWindow * getMainWindow();
 
     /**
      * Accessor for retrieving a QtkWidget by it's objectName.
@@ -64,21 +60,22 @@ class MainWindow : public QMainWindow {
      * @param name The objectName associated with the QtkWidget.
      * @return Pointer to an active QtkWidget or Q_NULLPTR is not found.
      */
-    inline Qtk::QtkWidget * getQtkWidget(const QString & name) {
-      if(!views_.count(name)) {
-        return Q_NULLPTR;
-      }
-      return views_[name];
-    }
+    Qtk::QtkWidget * getQtkWidget(const QString & name);
 
   public slots:
+    /**
+     * Trigger a refresh for widgets related to a scene that has been updated.
+     * @param sceneName The name of the scene that has been modified.
+     */
     void refreshScene(QString sceneName);
 
   private:
-    MainWindow(const MainWindow &) {};
     /***************************************************************************
      * Private Members
      **************************************************************************/
+
+    /** Do not allow copying */
+    MainWindow(const MainWindow &) {};
 
     Ui::MainWindow * ui_ {};
     static MainWindow * mainWindow_;

@@ -1,7 +1,8 @@
 ################################################################################
-## Author: Shaun Reed | Contact: shaunrd0@gmail.com | URL: www.shaunreed.com  ##
-##                                                                            ##
 ## Project for working with OpenGL and Qt6 widgets                            ##
+##                                                                            ##
+## Author: Shaun Reed | Contact: shaunrd0@gmail.com | URL: www.shaunreed.com  ##
+## All Content (c) 2023 Shaun Reed, all rights reserved                       ##
 ################################################################################
 cmake_minimum_required(VERSION 3.23)
 

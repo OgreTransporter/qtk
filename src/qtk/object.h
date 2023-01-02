@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Object class for storing object data                                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -13,8 +13,8 @@
 #include <QOpenGLTexture>
 #include <QOpenGLVertexArrayObject>
 
-#include "mesh.h"
 #include "qtkapi.h"
+#include "shape.h"
 #include "texture.h"
 
 namespace Qtk {
@@ -38,7 +38,7 @@ namespace Qtk {
       /**
        * Enum flag to identify Object type without casting.
        */
-      enum Type { OBJECT, MESH, MODEL };
+      enum Type { QTK_OBJECT, QTK_MESH, QTK_MODEL };
 
       /*************************************************************************
        * Constructors / Destructors
@@ -47,12 +47,16 @@ namespace Qtk {
       // Initialize an object with no shape data assigned
       explicit Object(const char * name, Type type) :
           mName(name), mVBO(QOpenGLBuffer::VertexBuffer), mBound(false),
-          mType(type) {}
+          mType(type) {
+        setObjectName(name);
+      }
 
       // Initialize an object with shape data assigned
       Object(const char * name, const ShapeBase & shape, Type type) :
           mName(name), mVBO(QOpenGLBuffer::VertexBuffer), mShape(shape),
-          mBound(false), mType(type) {}
+          mBound(false), mType(type) {
+        setObjectName(name);
+      }
 
       ~Object() override = default;
 
@@ -156,7 +160,7 @@ namespace Qtk {
       Texture mTexture;
       const char * mName;
       bool mBound;
-      Type mType = OBJECT;
+      Type mType = QTK_OBJECT;
   };
 }  // namespace Qtk
 

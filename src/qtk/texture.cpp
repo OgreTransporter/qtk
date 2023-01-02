@@ -1,12 +1,10 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Texture class to help with texture and image initializations        ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
-
-#include <utility>
 
 #include <QDebug>
 #include <QImageReader>
@@ -59,9 +57,7 @@ QOpenGLTexture * OpenGLTextureFactory::initCubeMap(
     const QImage & right, const QImage & top, const QImage & front,
     const QImage & left, const QImage & bottom, const QImage & back) {
   auto texture = new QOpenGLTexture(QOpenGLTexture::TargetCubeMap);
-  std::vector<QImage> faceTextures = {std::move(right),  std::move(top),
-                                      std::move(front),  std::move(left),
-                                      std::move(bottom), std::move(back)};
+  std::vector<QImage> faceTextures = {right, top, front, left, bottom, back};
   // Initialize skybox cubemap texture
   texture->create();
   texture->bind();

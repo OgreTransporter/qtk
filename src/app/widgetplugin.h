@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Generic Qt Designer widget plugin                                   ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -22,14 +22,21 @@ class QDESIGNER_WIDGET_EXPORT WidgetPlugin :
     using Factory = std::function<QWidget *(QWidget *)>;
 
   public:
+    /***************************************************************************
+     * Contructors / Destructors
+     **************************************************************************/
+
     WidgetPlugin(
         QString group, QString class_name, QString include, Factory factory);
 
-    explicit WidgetPlugin(QObject * parent = nullptr) : QObject(parent) {}
+    explicit WidgetPlugin(QObject * parent = nullptr);
 
     ~WidgetPlugin() = default;
 
-  public:
+    /***************************************************************************
+     * Public Methods
+     **************************************************************************/
+
     /**
      * @return The name of the group to which this widget belongs.
      */
@@ -56,7 +63,7 @@ class QDESIGNER_WIDGET_EXPORT WidgetPlugin :
      * @param parent Parent widget to the new instance of this widget.
      * @return A new instance of this custom widget.
      */
-    QWidget * createWidget(QWidget * parent) override;
+    [[nodiscard]] QWidget * createWidget(QWidget * parent) override;
 
     /**
      * @return Short description used in Qt Designer tool tips.
@@ -102,8 +109,11 @@ class QDESIGNER_WIDGET_EXPORT WidgetPlugin :
     [[nodiscard]] QString domXml() const override;
 
   private:
-    bool m_initialized = false;
+    /***************************************************************************
+     * Private Members
+     **************************************************************************/
 
+    bool m_initialized = false;
     QString m_group;
     QString m_className;
     QString m_objectName;

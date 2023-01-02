@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Skybox class using QtOpenGL                                         ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -11,6 +11,20 @@
 #include "texture.h"
 
 using namespace Qtk;
+
+/*******************************************************************************
+ * Constructors / Destructors
+ ******************************************************************************/
+
+Skybox::Skybox(const std::string & name) :
+    Skybox(
+        ":/right.png", ":/top.png", ":/front.png", ":/left.png", ":/bottom.png",
+        ":/back.png", name) {}
+
+Skybox::Skybox(QOpenGLTexture * cubeMap, const std::string & name) {
+  mTexture.setTexture(cubeMap);
+  init();
+}
 
 Skybox::Skybox(
     const std::string & right, const std::string & top,
@@ -25,16 +39,6 @@ Skybox::Skybox(
       QImage(right.c_str()).mirrored(), QImage(top.c_str()),
       QImage(front.c_str()), QImage(left.c_str()), QImage(bottom.c_str()),
       QImage(back.c_str()));
-}
-
-Skybox::Skybox(const std::string & name) :
-    Skybox(
-        ":/right.png", ":/top.png", ":/front.png", ":/left.png", ":/bottom.png",
-        ":/back.png", name) {}
-
-Skybox::Skybox(QOpenGLTexture * cubeMap, const std::string & name) {
-  mTexture.setTexture(cubeMap);
-  init();
 }
 
 /*******************************************************************************

@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Texture class to help with texture and image initializations        ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -156,52 +156,109 @@ namespace Qtk {
 
       Texture() = default;
 
+      /**
+       * Copies an existing Texture object.
+       *
+       * @param value Texture to copy.
+       */
       Texture(const Texture & value) {
         mOpenGLTexture = OpenGLTextureFactory::initTexture(value.mPath);
         mPath = value.mPath;
       }
 
+      /**
+       * @param path Path to texture to load on disk.
+       * @param flipX True if texture is to be flipped on the X axis.
+       * @param flipY True if texture is to be flipped on the Y axis.
+       */
       explicit Texture(
           const char * path, bool flipX = false, bool flipY = false) :
           mOpenGLTexture(OpenGLTextureFactory::initTexture(path, flipX, flipY)),
           mPath(path) {}
 
+      /**
+       * Construct a Texture using an existing QOpenGLTexture.
+       *
+       * @param texture OpenGL texture to use for this Texture.
+       */
       explicit Texture(QOpenGLTexture * texture) : mOpenGLTexture(texture) {}
 
       ~Texture() { mOpenGLTexture->destroy(); }
 
       /*************************************************************************
+       * Public Methods
+       ************************************************************************/
+
+      /**
+       * @return True if the OpenGL texture has been initialized.
+       */
+      [[nodiscard]] inline bool hasTexture() const {
+        return mOpenGLTexture != Q_NULLPTR;
+      }
+
+      /*************************************************************************
        * Accessors
        ************************************************************************/
 
+      /**
+       * @return QOpenGLTexture associated with this Texture.
+       */
       [[nodiscard]] inline QOpenGLTexture & getOpenGLTexture() const {
         return *mOpenGLTexture;
       }
 
+      /**
+       * @return Path to this Texture on disk.
+       */
       [[nodiscard]] inline std::string getPath() const { return mPath; }
 
       /*************************************************************************
        * Setters
        ************************************************************************/
 
-      void setTexture(
+      /**
+       * Replaces the current texture with a new texture.
+       *
+       * @param path Path to the new texture to load.
+       * @param flipX True if texture is to be flipped on the X axis.
+       * @param flipY True if texture is to be flipped on the Y axis.
+       */
+      inline void setTexture(
           const std::string & path, bool flipX = false, bool flipY = false) {
-        mOpenGLTexture =
-            OpenGLTextureFactory::initTexture(path.data(), flipX, flipY);
-        mPath = path.data();
+        setTexture(path.c_str(), flipX, flipY);
       }
 
-      void setTexture(
+      /**
+       * @param path Path to the new texture to load.
+       * @param flipX True if texture is to be flipped on the X axis.
+       * @param flipY True if texture is to be flipped on the Y axis.
+       */
+      inline void setTexture(
           const char * path, bool flipX = false, bool flipY = false) {
         mOpenGLTexture = OpenGLTextureFactory::initTexture(path, flipX, flipY);
         mPath = path;
       }
 
+      /**
+       * Sets this Texture to be a cube map with all identical sides.
+       *
+       * @param path Path to texture to use for all sides of the cube map.
+       */
       virtual inline void setCubeMap(const char * path) {
         mOpenGLTexture = OpenGLTextureFactory::initCubeMap(path);
         mPath = path;
       }
 
+      /**
+       * Sets this Texture to be a cube map with provided sides.
+       *
+       * @param right Path to texture to use for right cube map side.
+       * @param top Path to texture to use for top cube map side.
+       * @param front Path to texture to use for front cube map side.
+       * @param left Path to texture to use for left cube map side.
+       * @param bottom Path to texture to use for bottom cube map side.
+       * @param back Path to texture to use for back cube map side.
+       */
       virtual inline void setCubeMap(
           const char * right, const char * top, const char * front,
           const char * left, const char * bottom, const char * back) {
@@ -209,6 +266,16 @@ namespace Qtk {
             right, top, front, left, bottom, back);
       }
 
+      /**
+       * Sets this Texture to be a cube map with provided sides.
+       *
+       * @param right Path to texture to use for right cube map side.
+       * @param top Path to texture to use for top cube map side.
+       * @param front Path to texture to use for front cube map side.
+       * @param left Path to texture to use for left cube map side.
+       * @param bottom Path to texture to use for bottom cube map side.
+       * @param back Path to texture to use for back cube map side.
+       */
       virtual inline void setCubeMap(
           const QImage & right, const QImage & top, const QImage & front,
           const QImage & left, const QImage & bottom, const QImage & back) {
@@ -216,18 +283,14 @@ namespace Qtk {
             right, top, front, left, bottom, back);
       }
 
-      /*************************************************************************
-       * Public Methods
-       ************************************************************************/
-
-      [[nodiscard]] inline bool hasTexture() const {
-        return mOpenGLTexture != Q_NULLPTR;
-      }
-
     private:
       /*************************************************************************
        * Private Members
        ************************************************************************/
+
+      /**
+       * @param texture QOpenGLTexture to use for this Texture.
+       */
       inline void setTexture(QOpenGLTexture * texture) {
         mOpenGLTexture = texture;
       }
@@ -236,7 +299,6 @@ namespace Qtk {
       /* Path to this texture on disk or Qt resource. */
       const char * mPath {};
   };
-
 }  // namespace Qtk
 
 #endif  // QTOPENGL_TEXTURE_H

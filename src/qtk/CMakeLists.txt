@@ -1,7 +1,8 @@
 ################################################################################
-## Author: Shaun Reed | Contact: shaunrd0@gmail.com | URL: www.shaunreed.com  ##
-##                                                                            ##
 ## Project for working with OpenGL and Qt6 widgets                            ##
+##                                                                            ##
+## Author: Shaun Reed | Contact: shaunrd0@gmail.com | URL: www.shaunreed.com  ##
+## All Content (c) 2023 Shaun Reed, all rights reserved                       ##
 ################################################################################
 
 # TODO: Provide option for linking MainWindow with plugin statically
@@ -16,9 +17,10 @@
 set(PUBLIC_HEADERS
     camera3d.h
     input.h
-    mesh.h
+    shape.h
     meshrenderer.h
     model.h
+    modelmesh.h
     object.h
     qtkapi.h
     scene.h
@@ -30,9 +32,10 @@ set(PUBLIC_HEADERS
 set(SOURCE_FILES
     camera3d.cpp
     input.cpp
-    mesh.cpp
+    shape.cpp
     meshrenderer.cpp
     model.cpp
+    modelmesh.cpp
     object.cpp
     scene.cpp
     skybox.cpp

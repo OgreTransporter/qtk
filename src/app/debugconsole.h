@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Debug console for qtk views                                         ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -73,10 +73,14 @@ namespace Qtk {
        * @param name Base name for the DebugConsole window.
        */
       inline void setTitle(QString name) {
-        setWindowTitle(name + "Debug Console");
+        setWindowTitle(name + " Debug Console");
       }
 
     private:
+      /**
+       * @param context Log context severity level.
+       * @return QColor corresponding with the message context.
+       */
       [[nodiscard]] QColor logColor(const DebugContext & context) const {
         switch(context) {
           case Status:
@@ -94,6 +98,13 @@ namespace Qtk {
         }
       }
 
+      /**
+       * Prefixes a log message to add context level.
+       *
+       * @param message The message to prefix.
+       * @param context The log context severity level.
+       * @return The log message prefixed with the DebugContext level.
+       */
       [[nodiscard]] QString logPrefix(
           QString & message, const DebugContext & context) {
         QString prefix;
@@ -121,8 +132,8 @@ namespace Qtk {
         return message;
       }
 
-      QTextEdit * mConsole;
       Ui::DebugConsole * ui_;
+      QTextEdit * mConsole;
   };
 }  // namespace Qtk
 

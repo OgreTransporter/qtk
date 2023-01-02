@@ -1,14 +1,10 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
-## About: Classes for managing objects and data within a scene                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
+## About: Example Qtk scene                                                   ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
-
-#include <qtk/meshrenderer.h>
-#include <qtk/model.h>
-#include <qtk/texture.h>
 
 #include "examplescene.h"
 #include "resources.h"

@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Skybox class using QtOpenGL                                         ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -16,8 +16,8 @@
 #include <QOpenGLVertexArrayObject>
 
 #include "camera3d.h"
-#include "mesh.h"
 #include "qtkapi.h"
+#include "shape.h"
 #include "texture.h"
 
 namespace Qtk {
@@ -33,11 +33,35 @@ namespace Qtk {
        ************************************************************************/
 
       // Delegate this constructor to use default skybox images
+
+      /**
+       * Construct Skybox using default images.
+       *
+       * @param name The objectName to use for the Skybox.
+       */
       explicit Skybox(const std::string & name = "Skybox");
 
+      /**
+       * Construct a skybox with an existing QOpenGLTexture.
+       * The texture should be a fully initialized cube map.
+       *
+       * @param cubeMap QOpenGLTexture to use for the new Skybox.
+       * @param name The objectName to use for the Skybox.
+       */
       explicit Skybox(
           QOpenGLTexture * cubeMap, const std::string & name = "Skybox");
 
+      /**
+       * Construct a Skybox.
+       *
+       * @param right Image to use for the right side of the Skybox.
+       * @param top Image to use for the top side of the Skybox.
+       * @param front Image to use for the front side of the Skybox.
+       * @param left Image to use for the left side of the Skybox.
+       * @param bottom Image to use for the bottom side of the Skybox.
+       * @param back Image to use for the back side of the Skybox.
+       * @param name The objectName to use for this Skybox.
+       */
       Skybox(
           const std::string & right, const std::string & top,
           const std::string & front, const std::string & left,
@@ -50,6 +74,9 @@ namespace Qtk {
        * Public Methods
        ************************************************************************/
 
+      /**
+       * Draws the skybox.
+       */
       void draw();
 
     private:
@@ -57,6 +84,9 @@ namespace Qtk {
        * Private Methods
        ************************************************************************/
 
+      /**
+       * Initializes OpenGL buffers and shaders for this skybox.
+       */
       void init();
 
       /*************************************************************************

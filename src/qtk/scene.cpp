@@ -1,6 +1,6 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Classes for managing objects and data within a scene                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
@@ -15,7 +15,7 @@ Camera3D Scene::mCamera;
 QMatrix4x4 Scene::mProjection;
 
 /*******************************************************************************
- * Constructors, Destructors
+ * Constructors / Destructors
  ******************************************************************************/
 
 Scene::Scene() : mSceneName("Default Scene") {
@@ -34,7 +34,7 @@ Scene::~Scene() {
 }
 
 /*******************************************************************************
- * Accessors
+ * Public Methods
  ******************************************************************************/
 
 std::vector<Object *> Scene::getObjects() const {
@@ -49,9 +49,14 @@ std::vector<Object *> Scene::getObjects() const {
   return objects;
 }
 
-/*******************************************************************************
- * Setters
- ******************************************************************************/
+Object * Scene::getObject(const QString & name) {
+  for(auto object : getObjects()) {
+    if(object->getName() == name) {
+      return object;
+    }
+  }
+  return Q_NULLPTR;
+}
 
 void Scene::setSkybox(Skybox * skybox) {
   delete mSkybox;
@@ -89,13 +94,4 @@ void Scene::privateDraw() {
   for(const auto & mesh : mMeshes) {
     mesh->draw();
   }
-}
-
-Object * Scene::getObject(const QString & name) {
-  for(auto object : getObjects()) {
-    if(object->getName() == name) {
-      return object;
-    }
-  }
-  return Q_NULLPTR;
 }

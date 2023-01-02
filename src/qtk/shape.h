@@ -1,12 +1,12 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
 ## About: Collection of static mesh data for quick initialization             ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
-#ifndef QTK_MESH_H
-#define QTK_MESH_H
+#ifndef QTK_SHAPE_H
+#define QTK_SHAPE_H
 
 #include <utility>
 
@@ -16,11 +16,6 @@
 
 #include "qtkapi.h"
 #include "transform3D.h"
-
-namespace Qtk {
-  class MeshRenderer;
-
-  class Object;
 
 // Define vertices for drawing a cube using two faces (8 vertex points)
 // Front Vertices
@@ -63,7 +58,6 @@ namespace Qtk {
                       VECTOR_BACK, VECTOR_BACK, VECTOR_BACK
 // clang-format on
 
-
 // Colors using QVector3Ds as RGB values
 #define WHITE   VECTOR_ONE
 #define BLACK   VECTOR_ZERO
@@ -78,6 +72,11 @@ namespace Qtk {
 #define UV_TOP    QVector2D(1.0f, 0.0f)
 #define UV_RIGHT  QVector2D(0.0f, 1.0f)
 #define UV_CORNER QVector2D(1.0f, 1.0f)
+
+namespace Qtk {
+  class MeshRenderer;
+
+  class Object;
 
   // TODO: Vertices.getData(); Vertices.getStride();
   typedef std::vector<QVector3D> Vertices;
@@ -106,6 +105,15 @@ namespace Qtk {
        * Constructors / Destructors
        ************************************************************************/
 
+      /**
+       *
+       * @param mode OpenGL draw mode to use for this shape.
+       * @param v Vertex data for this shape.
+       * @param i Index data for this shape.
+       * @param c Color data for this shape.
+       * @param t Texture coordinates for this shape.
+       * @param n Normals for this shape.
+       */
       explicit ShapeBase(
           DrawMode mode = QTK_DRAW_ARRAYS, Vertices v = {}, Indices i = {},
           Colors c = {}, TexCoords t = {}, Normals n = {}) :
@@ -118,24 +126,42 @@ namespace Qtk {
        * Accessors
        ************************************************************************/
 
+      /**
+       * @return Vertex data for this shape.
+       */
       [[nodiscard]] inline const Vertices & getVertices() const {
         return mVertices;
       }
 
+      /**
+       * @return Index data for this shape.
+       */
       [[nodiscard]] inline const Indices & getIndexData() const {
         return mIndices;
       }
 
+      /**
+       * @return Color data for this shape.
+       */
       [[nodiscard]] inline const Colors & getColors() const { return mColors; }
 
+      /**
+       * @return Texture coordinates for this shape.
+       */
       [[nodiscard]] inline const TexCoords & getTexCoords() const {
         return mTexCoords;
       }
 
+      /**
+       * @return Normals for this shape.
+       */
       [[nodiscard]] inline const Normals & getNormals() const {
         return mNormals;
       }
 
+      /**
+       * @return Stride for texture coordinates on this shape.
+       */
       [[nodiscard]] inline size_t getTexCoordsStride() const {
         return mTexCoords.size() * sizeof(mTexCoords[0]);
       }
@@ -146,7 +172,6 @@ namespace Qtk {
        ************************************************************************/
 
       DrawMode mDrawMode;
-
       Vertices mVertices {};
       Colors mColors {};
       Indices mIndices {};
@@ -161,6 +186,7 @@ namespace Qtk {
        ************************************************************************/
 
       friend MeshRenderer;
+
       friend Object;
 
       /*************************************************************************
@@ -175,29 +201,44 @@ namespace Qtk {
        * Setters
        ************************************************************************/
 
+      /**
+       * @param value Vertex data to use for this shape.
+       */
       virtual inline void setVertices(const Vertices & value) {
         mVertices = value;
       }
 
+      /**
+       * @param value Index data to use for this shape.
+       */
       virtual inline void setIndices(const Indices & value) {
         mIndices = value;
       }
 
+      /**
+       * @param value Color data to use for this shape.
+       */
       virtual inline void setColors(const Colors & value) { mColors = value; }
 
+      /**
+       * @param value Texture coordinates to use for this shape.
+       */
       virtual inline void setTexCoords(const TexCoords & value) {
         mTexCoords = value;
       }
 
+      /**
+       * @param value Normals to use for this shape.
+       */
       virtual inline void setNormals(const Normals & value) {
         mNormals = value;
       }
 
+      /**
+       * @param value Shape to copy into this Shape.
+       */
       virtual inline void setShape(const Shape & value) { *this = value; }
   };
-
-  /* Primitives inherit from ShapeBase, doesn't allow setting shape values. */
-  class QTKAPI Mesh {};
 
   /* Simple Cube shape. */
   struct QTKAPI Cube : public ShapeBase {
@@ -210,4 +251,4 @@ namespace Qtk {
   };
 }  // namespace Qtk
 
-#endif  // QTK_MESH_H
+#endif  // QTK_SHAPE_H

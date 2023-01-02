@@ -1,7 +1,7 @@
 /*##############################################################################
 ## Author: Shaun Reed                                                         ##
-## Legal: All Content (c) 2022 Shaun Reed, all rights reserved                ##
-## About: Main window for Qt6 OpenGL widget application                       ##
+## Legal: All Content (c) 2023 Shaun Reed, all rights reserved                ##
+## About: QtkWidget for Qt desktop application                                ##
 ##                                                                            ##
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
@@ -9,9 +9,9 @@
 #include <QKeyEvent>
 #include <QVBoxLayout>
 
-#include "qtk/input.h"
-#include "qtk/mesh.h"
-#include "qtk/scene.h"
+#include <qtk/input.h>
+#include <qtk/scene.h>
+#include <qtk/shape.h>
 
 #include "debugconsole.h"
 #include "qtkmainwindow.h"
@@ -23,12 +23,15 @@ using namespace Qtk;
  * Constructors, Destructors
  ******************************************************************************/
 
+QtkWidget::QtkWidget(QWidget * parent) :
+    QtkWidget(parent, "QtkWidget") {}
+
 QtkWidget::QtkWidget(QWidget * parent, const QString & name) :
     QtkWidget(parent, name, Q_NULLPTR) {}
 
 QtkWidget::QtkWidget(QWidget * parent, const QString & name, Scene * scene) :
     QOpenGLWidget(parent), mDebugLogger(Q_NULLPTR),
-    mConsole(new DebugConsole(this, name)) {
+    mConsole(new DebugConsole(this, name)), mScene(Q_NULLPTR) {
   setScene(scene);
   setObjectName(name);
   QSurfaceFormat format;
@@ -64,10 +67,6 @@ QAction * QtkWidget::getActionToggleConsole() {
   connect(action, &QAction::triggered, this, &QtkWidget::toggleConsole);
   return action;
 }
-
-/*******************************************************************************
- * Public Inherited Virtual Methods
- ******************************************************************************/
 
 void QtkWidget::initializeGL() {
   initializeOpenGLFunctions();
@@ -113,9 +112,57 @@ void QtkWidget::paintGL() {
   }
 }
 
+void QtkWidget::setScene(Qtk::Scene * scene) {
+  delete mScene;
+  mScene = scene;
+  if(mScene != Q_NULLPTR) {
+    mConsole->setTitle(mScene->getSceneName());
+  } else {
+    mConsole->setTitle("Null Scene");
+  }
+}
+
+void QtkWidget::toggleConsole() {
+  if(mConsoleActive) {
+    mConsole->setHidden(true);
+    mConsoleActive = false;
+  } else {
+    MainWindow::getMainWindow()->addDockWidget(
+        Qt::DockWidgetArea::BottomDockWidgetArea,
+        dynamic_cast<QDockWidget *>(mConsole));
+    mConsole->setHidden(false);
+    mConsoleActive = true;
+  }
+}
+
 /*******************************************************************************
- * Protected Slots
+ * Protected Methods
  ******************************************************************************/
+
+void QtkWidget::keyPressEvent(QKeyEvent * event) {
+  if(event->isAutoRepeat()) {
+    // Do not repeat input while a key is held down
+    event->ignore();
+  } else {
+    Input::registerKeyPress(event->key());
+  }
+}
+
+void QtkWidget::keyReleaseEvent(QKeyEvent * event) {
+  if(event->isAutoRepeat()) {
+    event->ignore();
+  } else {
+    Input::registerKeyRelease(event->key());
+  }
+}
+
+void QtkWidget::mousePressEvent(QMouseEvent * event) {
+  Input::registerMousePress(event->button());
+}
+
+void QtkWidget::mouseReleaseEvent(QMouseEvent * event) {
+  Input::registerMouseRelease(event->button());
+}
 
 void QtkWidget::update() {
   updateCameraInput();
@@ -196,37 +243,47 @@ void QtkWidget::messageLogged(const QOpenGLDebugMessage & msg) {
 }
 
 /*******************************************************************************
- * Protected Methods
- ******************************************************************************/
-
-void QtkWidget::keyPressEvent(QKeyEvent * event) {
-  if(event->isAutoRepeat()) {
-    // Do not repeat input while a key is held down
-    event->ignore();
-  } else {
-    Input::registerKeyPress(event->key());
-  }
-}
-
-void QtkWidget::keyReleaseEvent(QKeyEvent * event) {
-  if(event->isAutoRepeat()) {
-    event->ignore();
-  } else {
-    Input::registerKeyRelease(event->key());
-  }
-}
-
-void QtkWidget::mousePressEvent(QMouseEvent * event) {
-  Input::registerMousePress(event->button());
-}
-
-void QtkWidget::mouseReleaseEvent(QMouseEvent * event) {
-  Input::registerMouseRelease(event->button());
-}
-
-/*******************************************************************************
  * Private Methods
  ******************************************************************************/
+
+void QtkWidget::teardownGL() { /* Nothing to teardown yet... */ }
+
+void QtkWidget::updateCameraInput() {
+  Input::update();
+  // Camera Transformation
+  if(Input::buttonPressed(Qt::RightButton)) {
+    static const float transSpeed = 0.1f;
+    static const float rotSpeed = 0.5f;
+
+    // Handle rotations
+    Scene::getCamera().getTransform().rotate(
+        -rotSpeed * Input::mouseDelta().x(), Camera3D::LocalUp);
+    Scene::getCamera().getTransform().rotate(
+        -rotSpeed * Input::mouseDelta().y(), Scene::getCamera().getRight());
+
+    // Handle translations
+    QVector3D translation;
+    if(Input::keyPressed(Qt::Key_W)) {
+      translation += Scene::getCamera().getForward();
+    }
+    if(Input::keyPressed(Qt::Key_S)) {
+      translation -= Scene::getCamera().getForward();
+    }
+    if(Input::keyPressed(Qt::Key_A)) {
+      translation -= Scene::getCamera().getRight();
+    }
+    if(Input::keyPressed(Qt::Key_D)) {
+      translation += Scene::getCamera().getRight();
+    }
+    if(Input::keyPressed(Qt::Key_Q)) {
+      translation -= Scene::getCamera().getUp() / 2.0f;
+    }
+    if(Input::keyPressed(Qt::Key_E)) {
+      translation += Scene::getCamera().getUp() / 2.0f;
+    }
+    Scene::getCamera().getTransform().translate(transSpeed * translation);
+  }
+}
 
 void QtkWidget::printContextInformation() {
   QString glType;
@@ -259,64 +316,4 @@ void QtkWidget::printContextInformation() {
                  + "\nRendering Device: " + glRenderer;
   qDebug() << qPrintable(message);
   sendLog("(OpenGL) " + message.replace("\n", "\n(OpenGL) "), Status);
-}
-
-void QtkWidget::updateCameraInput() {
-  Input::update();
-  // Camera Transformation
-  if(Input::buttonPressed(Qt::RightButton)) {
-    static const float transSpeed = 0.1f;
-    static const float rotSpeed = 0.5f;
-
-    // Handle rotations
-    Scene::getCamera().getTransform().rotate(
-        -rotSpeed * Input::mouseDelta().x(), Camera3D::LocalUp);
-    Scene::getCamera().getTransform().rotate(
-        -rotSpeed * Input::mouseDelta().y(), Scene::getCamera().right());
-
-    // Handle translations
-    QVector3D translation;
-    if(Input::keyPressed(Qt::Key_W)) {
-      translation += Scene::getCamera().forward();
-    }
-    if(Input::keyPressed(Qt::Key_S)) {
-      translation -= Scene::getCamera().forward();
-    }
-    if(Input::keyPressed(Qt::Key_A)) {
-      translation -= Scene::getCamera().right();
-    }
-    if(Input::keyPressed(Qt::Key_D)) {
-      translation += Scene::getCamera().right();
-    }
-    if(Input::keyPressed(Qt::Key_Q)) {
-      translation -= Scene::getCamera().up() / 2.0f;
-    }
-    if(Input::keyPressed(Qt::Key_E)) {
-      translation += Scene::getCamera().up() / 2.0f;
-    }
-    Scene::getCamera().getTransform().translate(transSpeed * translation);
-  }
-}
-
-void QtkWidget::toggleConsole() {
-  if(mConsoleActive) {
-    mConsole->setHidden(true);
-    mConsoleActive = false;
-  } else {
-    MainWindow::getMainWindow()->addDockWidget(
-        Qt::DockWidgetArea::BottomDockWidgetArea,
-        dynamic_cast<QDockWidget *>(mConsole));
-    mConsole->setHidden(false);
-    mConsoleActive = true;
-  }
-}
-
-void QtkWidget::setScene(Qtk::Scene * scene) {
-  delete mScene;
-  mScene = scene;
-  if(mScene != Q_NULLPTR) {
-    mConsole->setTitle(mScene->getSceneName());
-  } else {
-    mConsole->setTitle("Null Scene");
-  }
 }
