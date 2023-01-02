@@ -18,8 +18,9 @@ using namespace Qtk;
 
 Skybox::Skybox(const std::string & name) :
     Skybox(
-        ":/right.png", ":/top.png", ":/front.png", ":/left.png", ":/bottom.png",
-        ":/back.png", name) {}
+        ":/textures/skybox/right.png", ":/textures/skybox/top.png",
+        ":/textures/skybox/front.png", ":/textures/skybox/left.png",
+        ":/textures/skybox/bottom.png", ":/textures/skybox/back.png", name) {}
 
 Skybox::Skybox(QOpenGLTexture * cubeMap, const std::string & name) {
   mTexture.setTexture(cubeMap);
@@ -77,8 +78,10 @@ void Skybox::init() {
 
   // Set up shader program
   mProgram.create();
-  mProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/skybox.vert");
-  mProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/skybox.frag");
+  mProgram.addShaderFromSourceFile(
+      QOpenGLShader::Vertex, ":/shaders/skybox.vert");
+  mProgram.addShaderFromSourceFile(
+      QOpenGLShader::Fragment, ":/shaders/skybox.frag");
   mProgram.link();
   mProgram.bind();
 

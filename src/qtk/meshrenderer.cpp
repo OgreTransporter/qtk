@@ -30,8 +30,8 @@ MeshRenderer::MeshRenderer(const char * name) :
     MeshRenderer(name, Cube(QTK_DRAW_ELEMENTS)) {}
 
 MeshRenderer::MeshRenderer(const char * name, const ShapeBase & shape) :
-    Object(name, shape, QTK_MESH), mVertexShader(":/multi-color.vert"),
-    mFragmentShader(":/multi-color.frag"), mDrawType(GL_TRIANGLES) {
+    Object(name, shape, QTK_MESH), mVertexShader(":/shaders/multi-color.vert"),
+    mFragmentShader(":/shaders/multi-color.frag"), mDrawType(GL_TRIANGLES) {
   mShape = Shape(shape);
   init();
   sInstances.insert(name, this);

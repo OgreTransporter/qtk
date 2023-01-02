@@ -69,7 +69,7 @@ set(QTK_APP_SOURCES
     qtkmainwindow.h
     main.cpp
 )
-qt6_add_resources(QTK_APP_SOURCES ${CMAKE_SOURCE_DIR}/resources.qrc)
+qt6_add_resources(QTK_APP_SOURCES ${CMAKE_SOURCE_DIR}/resources/resources.qrc)
 configure_file(
     "resources.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/resources.h"

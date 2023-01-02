@@ -120,7 +120,8 @@ void ExampleScene::init() {
   // NOTE: You no longer need to manually bind shader program to set uniforms.
   // + You can still bind it if you want to for performance reasons.
   // + Qtk will only bind / release if the shader program is not already bound.
-  mTestPhong->setShaders(":/solid-phong.vert", ":/solid-phong.frag");
+  mTestPhong->setShaders(
+      ":/shaders/solid-phong.vert", ":/shaders/solid-phong.frag");
 
   // For example this would technically not be efficient, because each one of
   // these calls will bind, set, release. We could instead bind, set N uniforms,
@@ -146,14 +147,16 @@ void ExampleScene::init() {
   /* Example of a cube with no lighting applied */
   mesh = addObject(new Qtk::MeshRenderer("noLight", Cube(QTK_DRAW_ELEMENTS)));
   mesh->getTransform().setTranslation(5.0f, 0.0f, -2.0f);
-  mesh->setShaders(":/solid-perspective.vert", ":/solid-perspective.frag");
+  mesh->setShaders(
+      ":/shaders/solid-perspective.vert", ":/shaders/solid-perspective.frag");
   mesh->setUniform("uColor", QVector3D(0.0f, 0.25f, 0.0f));
   // No light source needed for this lighting technique
 
   /* Initialize Ambient example cube */
   mTestAmbient = new Qtk::MeshRenderer("ambient", Cube());
   mTestAmbient->getTransform().setTranslation(7.0f, 0.0f, -2.0f);
-  mTestAmbient->setShaders(":/solid-ambient.vert", ":/solid-ambient.frag");
+  mTestAmbient->setShaders(
+      ":/shaders/solid-ambient.vert", ":/shaders/solid-ambient.frag");
   // Changing these uniform values will alter lighting effects.
   mTestAmbient->setUniform("uColor", QVector3D(0.0f, 0.25f, 0.0f));
   mTestAmbient->setUniform("uLightColor", QVector3D(1.0f, 1.0f, 1.0f));
@@ -164,7 +167,8 @@ void ExampleScene::init() {
   /* Initialize Diffuse example cube */
   mTestDiffuse = new Qtk::MeshRenderer("diffuse", Cube());
   mTestDiffuse->getTransform().setTranslation(9.0f, 0.0f, -2.0f);
-  mTestDiffuse->setShaders(":/solid-diffuse.vert", ":/solid-diffuse.frag");
+  mTestDiffuse->setShaders(
+      ":/shaders/solid-diffuse.vert", ":/shaders/solid-diffuse.frag");
   mTestDiffuse->setUniform("uColor", QVector3D(0.0f, 0.25f, 0.0f));
   mTestDiffuse->setUniform("uLightColor", QVector3D(1.0f, 1.0f, 1.0f));
   mTestDiffuse->setUniform("uAmbientStrength", 0.2f);
@@ -179,7 +183,8 @@ void ExampleScene::init() {
   /* Initialize Specular example cube */
   mTestSpecular = new Qtk::MeshRenderer("specular", Cube());
   mTestSpecular->getTransform().setTranslation(11.0f, 0.0f, -2.0f);
-  mTestSpecular->setShaders(":/solid-specular.vert", ":/solid-specular.frag");
+  mTestSpecular->setShaders(
+      ":/shaders/solid-specular.vert", ":/shaders/solid-specular.frag");
   mTestSpecular->setUniform("uColor", QVector3D(0.0f, 0.25f, 0.0f));
   mTestSpecular->setUniform("uLightColor", QVector3D(1.0f, 1.0f, 1.0f));
   mTestSpecular->setUniform("uAmbientStrength", 0.2f);
@@ -197,7 +202,7 @@ void ExampleScene::init() {
   /* Test basic cube with phong.vert and phong.frag shaders */
   mesh = addObject(new Qtk::MeshRenderer("testPhong", Cube(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(5.0f, 0.0f, 10.0f);
-  mesh->setShaders(":/phong.vert", ":/phong.frag");
+  mesh->setShaders(":/shaders/phong.vert", ":/shaders/phong.frag");
   // WARNING: Set color before reallocating normals.
   mesh->setColor(QVector3D(0.0f, 0.25f, 0.0f));
   mesh->reallocateNormals(mesh->getNormals());
@@ -229,7 +234,7 @@ void ExampleScene::init() {
   /* Test alien Model with phong lighting and specular mapping. */
   model = addObject(new Qtk::Model(
       "alienTest", PATH("/models/alien-hominid/alien.obj"),
-      ":/model-specular.vert", ":/model-specular.frag"));
+      ":/shaders/model-specular.vert", ":/shaders/model-specular.frag"));
   model->getTransform().setTranslation(3.0f, -1.0f, 10.0f);
   model->getTransform().scale(0.15f);
   model->setUniform("uMaterial.ambient", QVector3D(1.0f, 1.0f, 1.0f));
@@ -255,7 +260,7 @@ void ExampleScene::init() {
   /* Test spartan Model with phong lighting, specular and normal mapping. */
   model = addObject(new Qtk::Model(
       "spartanTest", PATH("/models/spartan/spartan.obj"),
-      ":/model-normals.vert", ":/model-normals.frag"));
+      ":/shaders/model-normals.vert", ":/shaders/model-normals.frag"));
   model->getTransform().setTranslation(0.0f, -1.0f, 10.0f);
   model->getTransform().scale(2.0f);
   model->setUniform("uMaterial.ambient", QVector3D(1.0f, 1.0f, 1.0f));
@@ -285,22 +290,22 @@ void ExampleScene::init() {
   mesh = addObject(
       new Qtk::MeshRenderer("rgbNormalsCubeArraysTest", Cube(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(5.0f, 0.0f, 4.0f);
-  mesh->setShaders(":/rgb-normals.vert", ":/rgb-normals.frag");
+  mesh->setShaders(":/shaders/rgb-normals.vert", ":/shaders/rgb-normals.frag");
   mesh->reallocateNormals(mesh->getNormals());
 
   // RGB Normals cube to show normals are correct with QTK_DRAW_ELEMENTS_NORMALS
   mesh = addObject(new Qtk::MeshRenderer(
       "rgbNormalsCubeElementsTest", Cube(QTK_DRAW_ELEMENTS_NORMALS)));
   mesh->getTransform().setTranslation(5.0f, 0.0f, 2.0f);
-  mesh->setShaders(":/rgb-normals.vert", ":/rgb-normals.frag");
+  mesh->setShaders(":/shaders/rgb-normals.vert", ":/shaders/rgb-normals.frag");
   mesh->reallocateNormals(mesh->getNormals());
 
   Texture crateTexture;
-  crateTexture.setTexture(":/crate.png");
+  crateTexture.setTexture(":/textures/crate.png");
   Cube cube;
   auto * m = new MeshRenderer("Test Crate", Cube(QTK_DRAW_ARRAYS));
   m->getTransform().setTranslation(0, 0, 13);
-  m->setShaders(":/texture2d.vert", ":/texture2d.frag");
+  m->setShaders(":/shaders/texture2d.vert", ":/shaders/texture2d.frag");
   m->setTexture(crateTexture);
   m->setUniform("uTexture", 0);
   m->reallocateTexCoords(cube.getTexCoords());
@@ -314,7 +319,7 @@ void ExampleScene::init() {
   mesh = addObject(
       new Qtk::MeshRenderer("uvCubeArraysTest", Cube(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(-3.0f, 0.0f, -2.0f);
-  mesh->setShaders(":/texture2d.vert", ":/texture2d.frag");
+  mesh->setShaders(":/shaders/texture2d.vert", ":/shaders/texture2d.frag");
   mesh->setTexture(crateTexture);
   mesh->setUniform("uTexture", 0);
   mesh->reallocateTexCoords(mesh->getTexCoords());
@@ -323,8 +328,8 @@ void ExampleScene::init() {
   mesh = addObject(new Qtk::MeshRenderer(
       "uvCubeElementsTest", Cube(QTK_DRAW_ELEMENTS_NORMALS)));
   mesh->getTransform().setTranslation(-1.7f, 0.0f, -2.0f);
-  mesh->setTexture(":/crate.png");
-  mesh->setShaders(":/texture2d.vert", ":/texture2d.frag");
+  mesh->setTexture(":/textures/crate.png");
+  mesh->setShaders(":/shaders/texture2d.vert", ":/shaders/texture2d.frag");
   mesh->bindShaders();
   mesh->setUniform("uTexture", 0);
   mesh->reallocateNormals(mesh->getNormals());
@@ -338,8 +343,9 @@ void ExampleScene::init() {
       addObject(new Qtk::MeshRenderer("testCubeMap", Cube(QTK_DRAW_ELEMENTS)));
   mesh->getTransform().setTranslation(-3.0f, 1.0f, -2.0f);
   mesh->getTransform().setRotation(45.0f, 0.0f, 1.0f, 0.0f);
-  mesh->setShaders(":/texture-cubemap.vert", ":/texture-cubemap.frag");
-  mesh->setCubeMap(":/crate.png");
+  mesh->setShaders(
+      ":/shaders/texture-cubemap.vert", ":/shaders/texture-cubemap.frag");
+  mesh->setCubeMap(":/textures/crate.png");
   mesh->setUniform("uTexture", 0);
   mesh->reallocateTexCoords(mesh->getTexCoords());
 
@@ -348,30 +354,30 @@ void ExampleScene::init() {
   mesh =
       addObject(new Qtk::MeshRenderer("rgbNormalsCube", Cube(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(5.0f, 2.0f, -2.0f);
-  mesh->setShaders(":/rgb-normals.vert", ":/rgb-normals.frag");
+  mesh->setShaders(":/shaders/rgb-normals.vert", ":/shaders/rgb-normals.frag");
   mesh->reallocateNormals(mesh->getNormals());
 
   // RGB Normals triangle to show normals are correct with QTK_DRAW_ARRAYS
   mesh = addObject(new Qtk::MeshRenderer(
       "rgbTriangleArraysTest", Triangle(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(7.0f, 0.0f, 2.0f);
-  mesh->setShaders(":/rgb-normals.vert", ":/rgb-normals.frag");
+  mesh->setShaders(":/shaders/rgb-normals.vert", ":/shaders/rgb-normals.frag");
   mesh->reallocateNormals(mesh->getNormals());
 
   // RGB Normals triangle to show normals are correct with QTK_DRAW_ELEMENTS
   mesh = addObject(new Qtk::MeshRenderer(
       "rgbTriangleElementsTest", Triangle(QTK_DRAW_ELEMENTS_NORMALS)));
   mesh->getTransform().setTranslation(7.0f, 0.0f, 4.0f);
-  mesh->setShaders(":/rgb-normals.vert", ":/rgb-normals.frag");
+  mesh->setShaders(":/shaders/rgb-normals.vert", ":/shaders/rgb-normals.frag");
   mesh->reallocateNormals(mesh->getNormals());
 
   // Test drawing triangle with glDrawArrays with texture coordinates
   mesh = addObject(
       new Qtk::MeshRenderer("testTriangleArraysUV", Triangle(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(-3.0f, 2.0f, -2.0f);
-  mesh->setShaders(":/texture2d.vert", ":/texture2d.frag");
+  mesh->setShaders(":/shaders/texture2d.vert", ":/shaders/texture2d.frag");
 
-  mesh->setTexture(":/crate.png");
+  mesh->setTexture(":/textures/crate.png");
   mesh->setUniform("uTexture", 0);
   mesh->reallocateTexCoords(mesh->getTexCoords());
 
@@ -379,8 +385,8 @@ void ExampleScene::init() {
   mesh = addObject(new Qtk::MeshRenderer(
       "testTriangleElementsUV", Triangle(QTK_DRAW_ELEMENTS_NORMALS)));
   mesh->getTransform().setTranslation(-2.5f, 0.0f, -1.0f);
-  mesh->setShaders(":/texture2d.vert", ":/texture2d.frag");
-  mesh->setTexture(":/crate.png");
+  mesh->setShaders(":/shaders/texture2d.vert", ":/shaders/texture2d.frag");
+  mesh->setTexture(":/textures/crate.png");
   mesh->setUniform("uTexture", 0);
   mesh->reallocateTexCoords(mesh->getTexCoords());
 }

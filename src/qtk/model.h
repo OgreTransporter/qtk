@@ -50,8 +50,8 @@ namespace Qtk {
        */
       inline Model(
           const char * name, const char * path,
-          const char * vertexShader = ":/model-basic.vert",
-          const char * fragmentShader = ":/model-basic.frag") :
+          const char * vertexShader = ":/shaders/model-basic.vert",
+          const char * fragmentShader = ":/shaders/model-basic.frag") :
           Object(name, QTK_MODEL),
           mModelPath(path), mVertexShader(vertexShader),
           mFragmentShader(fragmentShader) {

@@ -46,7 +46,7 @@ namespace Qtk {
    * @return Default icon to use for Qtk desktop application.
    */
   static QIcon getIcon() {
-    return QIcon(":/icons/resources/icon.png");
+    return QIcon(":/icons/icon.png");
   }
 }  // namespace Qtk
 

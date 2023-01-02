@@ -5,12 +5,6 @@
 ## All Content (c) 2023 Shaun Reed, all rights reserved                       ##
 ################################################################################
 
-# TODO: Provide option for linking MainWindow with plugin statically
-# TODO: QtkWidget plugin should instantiate a ptr to DebugConsole and store it as a member.
-#       Then we can connect a signal from MainWindow for creating a console to QtkWidget
-#       When triggered QtkWidget slot will send signal to MainWindow
-#       MainWindow catches signal and runs slot to attach DebugConsole to MainWindow as QDockWidget
-# TODO: Create a second repository for working on QtkApplication (MainWindow)
 ################################################################################
 # Qtk Library
 ################################################################################
