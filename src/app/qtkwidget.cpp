@@ -23,8 +23,7 @@ using namespace Qtk;
  * Constructors, Destructors
  ******************************************************************************/
 
-QtkWidget::QtkWidget(QWidget * parent) :
-    QtkWidget(parent, "QtkWidget") {}
+QtkWidget::QtkWidget(QWidget * parent) : QtkWidget(parent, "QtkWidget") {}
 
 QtkWidget::QtkWidget(QWidget * parent, const QString & name) :
     QtkWidget(parent, name, Q_NULLPTR) {}
@@ -246,7 +245,8 @@ void QtkWidget::messageLogged(const QOpenGLDebugMessage & msg) {
  * Private Methods
  ******************************************************************************/
 
-void QtkWidget::teardownGL() { /* Nothing to teardown yet... */ }
+void QtkWidget::teardownGL() { /* Nothing to teardown yet... */
+}
 
 void QtkWidget::updateCameraInput() {
   Input::update();

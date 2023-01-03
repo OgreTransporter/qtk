@@ -12,7 +12,7 @@
 
 ExampleWidget::ExampleWidget(QWidget * parent) :
     QOpenGLWidget(parent), mScene(new ExampleScene) {
-   QSurfaceFormat format;
+  QSurfaceFormat format;
   format.setRenderableType(QSurfaceFormat::OpenGL);
   format.setProfile(QSurfaceFormat::CoreProfile);
   format.setVersion(4, 6);

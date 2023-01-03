@@ -97,7 +97,8 @@ namespace Qtk {
        * @param location The uniform location
        * @param value The value to assign to the uniform
        */
-      template <typename T> inline void setUniform(const char * location, T value) {
+      template <typename T>
+      inline void setUniform(const char * location, T value) {
         for(auto & mesh : mMeshes) {
           mesh.mProgram->bind();
           mesh.mProgram->setUniformValue(location, value);

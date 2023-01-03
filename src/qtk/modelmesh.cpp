@@ -6,8 +6,8 @@
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
 
-#include "scene.h"
 #include "modelmesh.h"
+#include "scene.h"
 
 using namespace Qtk;
 

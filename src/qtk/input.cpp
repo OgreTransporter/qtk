@@ -19,12 +19,12 @@ using namespace Qtk;
  * Static Helper Structs
  ******************************************************************************/
 
- /**
-  * Struct to hold key input state. When a key is pressed we construct this and
-  * store it within a KeyContainer (or ButtonContainer for mouse buttons).
-  *
-  * @tparam T Qt::Key or Qt::MouseButton input type for this instance.
-  */
+/**
+ * Struct to hold key input state. When a key is pressed we construct this and
+ * store it within a KeyContainer (or ButtonContainer for mouse buttons).
+ *
+ * @tparam T Qt::Key or Qt::MouseButton input type for this instance.
+ */
 template <typename T> struct InputInstance : std::pair<T, Input::InputState> {
     typedef std::pair<T, Input::InputState> base_class;
 
