@@ -8,7 +8,8 @@
 ################################################################################
 # Qtk Library
 ################################################################################
-set(PUBLIC_HEADERS
+set(
+    QTK_LIBRARY_PUBLIC_HEADERS
     camera3d.h
     input.h
     shape.h
@@ -23,7 +24,8 @@ set(PUBLIC_HEADERS
     transform3D.h
 )
 
-set(SOURCE_FILES
+set(
+    QTK_LIBRARY_SOURCES
     camera3d.cpp
     input.cpp
     shape.cpp
@@ -37,12 +39,14 @@ set(SOURCE_FILES
     transform3D.cpp
 )
 
-qt_add_library(qtk-library SHARED)
-target_sources(qtk-library PRIVATE ${SOURCE_FILES})
-target_sources(qtk-library PUBLIC
+qt6_add_resources(QTK_LIBRARY_SOURCES "${QTK_RESOURCES}/resources.qrc")
+qt_add_library(qtk-library STATIC)
+target_sources(qtk-library PRIVATE ${QTK_LIBRARY_SOURCES})
+target_sources(
+    qtk-library PUBLIC
     FILE_SET HEADERS
-    BASE_DIRS ${CMAKE_SOURCE_DIR}/src
-    FILES ${PUBLIC_HEADERS}
+      BASE_DIRS "${CMAKE_SOURCE_DIR}/src"
+      FILES ${QTK_LIBRARY_PUBLIC_HEADERS}
 )
 
 if(QTK_DEBUG)
@@ -52,13 +56,15 @@ if(QTK_SHARED)
   target_compile_definitions(qtk-library PUBLIC QTK_SHARED)
 endif()
 
-set_target_properties(qtk-library PROPERTIES
+set_target_properties(
+    qtk-library PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
     VERSION ${PROJECT_VERSION}
 )
 
-target_link_libraries(qtk-library PUBLIC
+target_link_libraries(
+    qtk-library PUBLIC
     Qt6::Core Qt6::OpenGLWidgets Qt6::Widgets
 )
 
@@ -73,21 +79,23 @@ if(WIN32)
 endif()
 
 # System install for qtk-library
-# TODO: Use RUNTIME_DEPENDENCY_SET to install Qt libraries for local builds?
-install(TARGETS qtk-library
+install(
+    TARGETS qtk-library
     # Associate qtk-library target with qtk-export
     EXPORT qtk-export
-    FILE_SET HEADERS DESTINATION "${QTK_INSTALL_PREFIX}/include"
-    BUNDLE DESTINATION ${QTK_INSTALL_PREFIX}/lib
-    LIBRARY DESTINATION ${QTK_INSTALL_PREFIX}/lib
-    ARCHIVE DESTINATION ${QTK_INSTALL_PREFIX}/lib/static
-    RUNTIME DESTINATION ${QTK_INSTALL_PREFIX}/bin
+    FILE_SET HEADERS DESTINATION include
+    BUNDLE DESTINATION lib
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
 )
 
 ## Install qtk-library to Qt Designer to support widget plugins.
-install(TARGETS qtk-library
-    BUNDLE DESTINATION ${QTK_PLUGIN_LIBRARY_DIR}
-    LIBRARY DESTINATION ${QTK_PLUGIN_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${QTK_PLUGIN_LIBRARY_DIR}
-    RUNTIME DESTINATION ${QTK_PLUGIN_LIBRARY_DIR}
+install(
+    TARGETS qtk-library
+    BUNDLE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
 )

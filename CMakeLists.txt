@@ -10,6 +10,7 @@ cmake_minimum_required(VERSION 3.23)
 # Includes
 ################################################################################
 include("${CMAKE_SOURCE_DIR}/cmake/include/git_submodule.cmake")
+include(CMakePackageConfigHelpers)
 
 ################################################################################
 # Constants
@@ -47,29 +48,19 @@ option(QTK_BUILD_GUI "Build the Qtk desktop application" ON)
 # Options for bringing your own assimp installation; Otherwise not needed
 # + If assimp is available system-wide we can just set QTK_UPDATE_SUBMODULES OFF
 option(ASSIMP_NEW_INTERFACE "Use the assimp::assimp interface (WIN / OSX)" OFF)
-message(STATUS
-    "[Qtk] ASSIMP_NEW_INTERFACE=${ASSIMP_NEW_INTERFACE}"
-)
+message(STATUS "[Qtk] ASSIMP_NEW_INTERFACE=${ASSIMP_NEW_INTERFACE}")
 
 set(QT_DIR "$ENV{HOME}/Code/Clones/Qt/" CACHE PATH "Path to Qt6")
 # Qt Designer will look in different locations if WIN / Unix.
 # These paths are for using Qt Designer integrated within Qt Creator.
 # Standalone Qt Designer may use different paths.
 if (WIN32)
-  set(QT_PLUGIN_INSTALL_DIR
-      "${QT_DIR}/Tools/QtCreator/bin/plugins/designer"
-      )
-  # This path may be different on windows. I have not tested this.
-  set(QT_PLUGIN_LIBRARY_DIR
-      "${QT_DIR}/Tools/QtCreator/lib/Qt/lib"
-      )
+  # These paths may be different on windows. I have not tested this.
+  set(QT_PLUGIN_INSTALL_DIR "${QT_DIR}/Tools/QtCreator/bin/plugins/designer")
+  set(QT_PLUGIN_LIBRARY_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/lib")
 else()
-  set(QT_PLUGIN_INSTALL_DIR
-      "${QT_DIR}/Tools/QtCreator/lib/Qt/plugins/designer"
-      )
-  set(QT_PLUGIN_LIBRARY_DIR
-      "${QT_DIR}/Tools/QtCreator/lib/Qt/lib"
-      )
+  set(QT_PLUGIN_INSTALL_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/plugins/designer")
+  set(QT_PLUGIN_LIBRARY_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/lib")
 endif()
 
 # This should be set to your Qt6 installation directory.
@@ -80,9 +71,7 @@ list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
 
 set(QTK_PLUGIN_LIBRARY_DIR "${QT_PLUGIN_LIBRARY_DIR}")
 set(QTK_PLUGIN_INSTALL_DIR "${QT_PLUGIN_INSTALL_DIR}")
-set(QTK_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
-#set(QTK_INSTALL_PREFIX "${QT_INSTALL_DIR}")
-#set(QTK_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+message(STATUS "[Qtk] CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
 set(QTK_RESOURCES "${CMAKE_SOURCE_DIR}/resources")
 
 # Print all QTK options and their values.
@@ -99,12 +88,12 @@ endforeach()
 # Find Qt
 find_package(Qt6 COMPONENTS Core UiPlugin OpenGLWidgets)
 if(NOT Qt6_FOUND)
-  message(SEND_ERROR
-      "[Qtk] Error: Unable to find Qt6 at CMAKE_PREFIX_PATH: "
+  message(
+      SEND_ERROR "[Qtk] Error: Unable to find Qt6 at CMAKE_PREFIX_PATH: "
       "${CMAKE_PREFIX_PATH}"
   )
-  message(FATAL_ERROR
-      "[Qtk] Error: Specify path to Qt6 with `cmake "
+  message(
+      FATAL_ERROR "[Qtk] Error: Specify path to Qt6 with `cmake "
       "-DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x/gcc_64 -S /path/to/qtk -B "
       "/path/to/qtk/build && cmake --build /path/to/qtk/build -j $(nprocs)`"
   )
@@ -130,7 +119,8 @@ add_subdirectory(src)
 
 if(WIN32)
   get_target_property(_qt6_qmake_location Qt6::qmake IMPORTED_LOCATION)
-  execute_process(COMMAND "${_qt6_qmake_location}" -query QT_INSTALL_PREFIX
+  execute_process(
+      COMMAND "${_qt6_qmake_location}" -query QT_INSTALL_PREFIX
       RESULT_VARIABLE return_code
       OUTPUT_VARIABLE qt6_install_prefix
       OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -138,7 +128,8 @@ if(WIN32)
   file(TO_NATIVE_PATH "${qt6_install_prefix}/bin" qt6_install_prefix)
 
   if(TARGET Qt6::windeployqt)
-    add_custom_command(TARGET qtk-main
+    add_custom_command(
+        TARGET qtk-main
         POST_BUILD
         COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}
         COMMAND Qt6::windeployqt --dir "${CMAKE_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:qtk-main>/$<TARGET_FILE_NAME:qtk-main>"
@@ -147,7 +138,7 @@ if(WIN32)
   endif()
 
   if(MSVC AND TARGET Qt6::qmake)
-    set(VSUSER_FILE ${CMAKE_CURRENT_BINARY_DIR}/qtk-main.vcxproj.user)
+    set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk-main.vcxproj.user")
     file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/extern/assimp/assimp/bin" assimp_bin)
     file(WRITE ${VSUSER_FILE} "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
     file(APPEND ${VSUSER_FILE} "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")

@@ -10,15 +10,34 @@ add_subdirectory(qtk)
 
 # Qtk Application
 if (QTK_BUILD_GUI)
-  #TODO: Use this to test local builds?
-#  SET(CMAKE_INSTALL_RPATH "${QTK_INSTALL_PREFIX}/lib")
   add_subdirectory(app)
 endif()
 
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/QtkConfigVersion.cmake"
+    COMPATIBILITY AnyNewerVersion
+)
+configure_package_config_file(
+    "${CMAKE_SOURCE_DIR}/cmake/templates/Config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/QtkConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/Qtk
+)
+install(
+    FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/QtkConfig.cmake"
+      "${CMAKE_CURRENT_BINARY_DIR}/QtkConfigVersion.cmake"
+    DESTINATION lib/cmake/Qtk
+)
+
 # Install export
-install(EXPORT qtk-export
+install(
+    EXPORT qtk-export
     FILE QtkTargets.cmake
     NAMESPACE Qtk::
-    CONFIGURATIONS Debug|Release
-    DESTINATION ${QTK_INSTALL_PREFIX}/cmake
+    DESTINATION lib/cmake/Qtk
 )
+
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+include(CPack)
