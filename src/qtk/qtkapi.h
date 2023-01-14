@@ -22,6 +22,13 @@
 #define QTKAPI
 #endif
 
+/**
+ * Initialize Qt resources required by the Qtk library.
+ * This cannot be defined within any namespace, but can be called by ctors.
+ * See object.h for example.
+ */
+inline void initResources() { Q_INIT_RESOURCE(resources); }
+
 namespace Qtk {
   /**
    * Flag to set context for debug messages.

@@ -2,54 +2,35 @@
 [![All Builds](https://github.com/shaunrd0/qtk/actions/workflows/all-builds.yml/badge.svg)](https://github.com/shaunrd0/qtk/actions/workflows/all-builds.yml)
 [![Linting](https://github.com/shaunrd0/qtk/actions/workflows/linting.yml/badge.svg)](https://github.com/shaunrd0/qtk/actions/workflows/linting.yml)
 
-Model loader using [Assimp](https://assimp.org/) within a Qt widget application.
+Qtk is a Qt OpenGL graphics library created primarily for my own learning
+purposes. The library wraps some QOpenGL functionality in convenience classes
+that allow rendering geometry in 2D and 3D using custom GLSL shader programs.
 
-You can import your own models within `app/examplescene.cpp`, inside the
-`ExampleScene::init()` function. Rotations and translations
-happen in `ExampleScene::update()`.
+The long-term goal for this project is to create a tool that I can use to
+practice shader coding or graphics programming techniques. In doing this I hope
+to also learn more about the Qt UI framework, and the CMake build system.
+
+Key features that are planned:
+ * Runtime loading of `.obj` or similar 3D models.
+ * Drag-and-drop interaction for adding objects to the scene.
+ * Runtime reloading of modified GLSL shaders attached to objects within scenes.
+ * Multiple views of a scene at one time.
+ * Camera control modes such as panning, orbiting, or following objects.
+ * Save / load for scene data. The current inheritance model is temporary.
+ * Basic text editor for quickly modifying shaders attached to objects.
+ * Shader / object properties panel to modify related settings.
+
+The Qtk desktop application provides a model loader using [Assimp](https://assimp.org/) within a Qt widget application.
+
+For examples of using the Qtk API, see the `example-app` project in the root of
+this repository.
 
 To get textures loading on models look into [material files](http://www.paulbourke.net/dataformats/mtl/)
 and see some examples in the `resources/models/` directory.
 
-The syntax for adding shapes and models is seen in the example below.
-This would result in a scene with a red cube and a miniature spartan model placed on top.
-
-```C++
-// From: qtk/app/examplescene.cpp
-
-void ExampleScene::init() {
-  // Add a skybox to the scene using default cube map images and settings.
-  setSkybox(new Qtk::Skybox("Skybox"));
-
-  /* Create a red cube with a mini master chief on top. */
-  auto myCube = new MeshRenderer("My cube", Cube(Qtk::QTK_DRAW_ELEMENTS));
-  myCube->setColor(RED);
-  mMeshes.push_back(myCube);
-
-  auto mySpartan = new Model("My spartan", ":/models/spartan/spartan.obj");
-  mySpartan->getTransform().setTranslation(0.0f, 0.5f, 0.0f);
-  mySpartan->getTransform().setScale(0.5f);
-  mModels.push_back(mySpartan);
-}
-```
-
-If we want to make our spartan spin, we need to apply rotation in `update`
-
-```C++
-// From: qtk/app/examplescene.cpp
-
-void ExampleScene::update() {
-  auto mySpartan = Model::getInstance("My spartan");
-  mySpartan->getTransform().rotate(0.75f, 0.0f, 1.0f, 0.0f);
-
-  auto myCube = MeshRenderer::getInstance("My cube");
-  myCube->getTransform().rotate(-0.75f, 0.0f, 1.0f, 0.0f);
-}
-```
-
 ### Source Builds
 
-Builds are configured for CLion or [Qt Creator](https://github.com/qt-creator/qt-creator).
+Qtk was developed and tested using CLion and [Qt Creator](https://github.com/qt-creator/qt-creator).
 Simply open the root `CMakeLists.txt` with either of these editors and configurations will be loaded.
 
 This project has been ported to Qt6, which is not yet available in Ubuntu apt repositories.
@@ -61,32 +42,74 @@ Be sure to take note of the Qt6 installation directory, as we will need it to co
 Once Qt6 is installed, to build and run `qtk` on Ubuntu -
 ```bash
 sudo apt update -y && sudo apt install libassimp-dev cmake build-essential git
-git clone https://gitlab.com/shaunrd0/qtk
+git clone https://github.com/shaunrd0/qtk
 cmake -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64 -S qtk/ -B qtk/build/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
 ./qtk/build/qtk-main
 ```
 
-By default, the build will initialize Assimp as a git submodule and build from source.
-We can turn this off by setting the `-DQTK_UPDATE_SUBMODULES=OFF` flag when running CMake.
-This will greatly increase build speed, but we will need to make sure Assimp is available either system-wide or using a custom `CMAKE_PREFIX_PATH`.
+By default, the build will not initialize Assimp as a git submodule and build from source.
+We can turn this on by setting the `-DQTK_UPDATE_SUBMODULES=ON` flag when running CMake.
+Building using this option will fetch and build Assimp for us, but builds will take longer as a result.
 Using `-DQTK_UPDATE_SUBMODULES=ON` supports providing assimp on cross-platform builds (Windows / Mac / Linux) and may be easier to configure.
 
 ```bash
 sudo apt update -y && sudo apt install freeglut3-dev libassimp-dev cmake build-essential git
 git clone https://gitlab.com/shaunrd0/qtk
-cmake -DQTK_UPDATE_SUBMODULES=OFF -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64 -S qtk/ -B qtk/build/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
-# We can also provide a path to assimp -
-#cmake -DQTK_UPDATE_SUBMODULES=OFF -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64;/path/to/assimp/ -S qtk/ -B qtk/build/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
+cmake -DQTK_UPDATE_SUBMODULES=ON -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64 -S qtk/ -B qtk/build/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
 ./qtk/build/qtk-main
+```
+
+If any errors are encountered loading plugins, we can debug plugin loading by setting the following environment variable -
+
+```bash
+QT_DEBUG_PLUGINS=1 ./qtk-main
 ```
 
 #### Windows / MacOS
 
 If you are building on **Windows / Mac** and bringing your own installation of Assimp, consider setting the `-DASSIMP_NEW_INTERFACE` build flag.
 ```bash
-cmake -DASSIMP_NEW_INTERFACE=ON -DQTK_UPDATE_SUBMODULES=OFF -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64;/path/to/assimp/ -S qtk/ -B qtk/build/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
+cmake -S qtk/ -B qtk/build/  -DASSIMP_NEW_INTERFACE=ON -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64;/path/to/assimp/ && cmake --build qtk/build/ -j $(nproc --ignore=2) --target qtk-main
 ```
 
+### Qtk Plugin Collection
+
+This project defines a collection of widget plugins for use with Qt Designer.
+These plugins were used to build the interface for the Qtk desktop application.
+Qt Designer will list Qtk widgets in the side panel when editing a UI file within the designer.
+Qtk widgets will also render and behave correctly within the UI preview in designer.
+The widgets in the Qtk collection were created by implementing the [QDesignerCustomWidgetInterface](https://doc.qt.io/qt-6/qdesignercustomwidgetinterface.html#details) and [QDesignerCustomWidgetCollectionInterface](https://doc.qt.io/qt-6/qdesignercustomwidgetcollectioninterface.html) interfaces.
+
+To build and install the Qtk plugin collection -
+
+```bash
+cmake -S /path/to/qtk -B /path/to/qtk/build -DCMAKE_PREFIX_PATH=$HOME/Qt/6.3.1/gcc_64
+cmake --build /path/to/qtk/build --target qtk-collection
+cmake --install /path/to/qtk/build
+```
+
+To uninstall after a previous installation, we can run the following command from the root of the repository.
+```bash
+xargs rm < build/install_manifest.txt
+```
+
+
+### Controls
+
+You can fly around the scene if you hold the right mouse button and use WASD.
+If you see a small triangle floating by a model it represents the light source
+that is being used for the shader rendering the model. These appear on models
+using phong, specular, and diffuse lighting techniques.
+
+![](resources/screenshot.png)
+
+Spartan with no normals -
+
+![](resources/spartan-specular.png)
+
+Spartan with normals -
+
+![](resources/spartan-normals.png)
 
 #### Development
 
@@ -101,7 +124,7 @@ cmake --build build -j $(nproc --ignore=2)
 sudo cmake --build build -j $(nproc --ignore=2) --target install
 ```
 
-If this version is any earlier than `15.0.0`, running `clang-format` will fail because this project uses configuration options made available since `15.0.0`.
+If the `clang-format` version is any earlier than `15.0.0`, running `clang-format` will fail because this project uses configuration options made available since `15.0.0`.
 
 ```bash
 clang-format --version
@@ -146,43 +169,40 @@ changed files:
     src/transform3D.h
 ```
 
-### Controls
+##### Packaging
 
-You can fly around the scene if you hold the right mouse button and use WASD.
-If you see a small triangle floating by a model it represents the light source
-that is being used for the shader rendering the model. These appear on models
-using phong, specular, and diffuse lighting techniques.
+Packaging for Qtk is in early development.
+This section documents how to package Qtk, but only source builds have been verified on Windows / Mac / Linux.
+For this reason, it is recommended to install Qtk by strictly building from source at this time.
 
-![](resources/screenshot.png)
+Below are the steps to package a Qtk release.
 
-Spartan with no normals -
+```bash
+cd /path/to/qtk && cmake -B build
+# Package Qtk
+cmake --build build --target package
+# Package Qtk including source files
+cmake --build build --target package_source
+```
 
-![](resources/spartan-specular.png)
+Alternatively, we can use `cpack` directly -
+```bash
+cd /path/to/qtk && cmake -B build
+# Generate all install packages
+cpack -C Release
+# Generate a specific install package (ZIP)
+cpack -C Release -G ZIP
+# Generate a specific install package (DEB)
+cpack -C Release -G DEB
+```
 
-Spartan with normals -
+##### Resources
 
-![](resources/spartan-normals.png)
+Some useful links and resources that I have found while working on this project.
 
+[Qt Designer UI file format](https://doc.qt.io/qt-6/designer-ui-file-format.html)
 
-### QtkWidget in Qt Creator
-
-We can add more QtkWidgets to view and render the scene from multiple perspectives.
-There is still some work to be done here, so there isn't a builtin way to add an additional view within the application.
-
-![](resources/qtk-views.png)
-
-After building Qtk, we can drag and drop an `OpenGL Widget` onto the `mainwindow.ui`.
-Then right-click the new OpenGLWidget and `Promote To->QtkWidget` to add a second view.
-
-![](resources/qtk-views-setup.png)
-
-If we demote or delete all widgets in `mainwindow.ui` and rebuild the project, Qt Creator will drop `QtkWidget` from the list of possible promoted widgets.
-Add an `OpenGL Widget` to the UI, right-click it and navigate to `Promote Widget...` and enter the information below.
-
-![](resources/qtk-reference.png)
-
-After you fill out the `New Promoted Class` form, click `Add` *and*`Promote`, then rebuild.
-After following these steps Qt Creator will list `QtkWidget` as an option to promote `OpenGL Widgets` again.
+[QtPlugin Import / Export plugins](https://doc.qt.io/qt-6/qtplugin.html)
 
 
 ## Model Artists

@@ -22,7 +22,7 @@ set(
     toolbox.h
     treeview.h
 )
-qt_add_library(qtk-plugin-library SHARED)
+qt_add_library(qtk-plugin-library STATIC)
 target_sources(
     qtk-plugin-library PRIVATE
     "${QTK_PLUGIN_LIBRARY_SOURCES}"
@@ -90,10 +90,10 @@ target_link_libraries(qtk-main PRIVATE qtk-plugin-library)
 
 set_target_properties(
     qtk-main PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+      WIN32_EXECUTABLE TRUE
+      MACOSX_BUNDLE TRUE
+      MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+      MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
 install(

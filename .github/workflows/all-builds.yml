@@ -37,7 +37,7 @@ jobs:
       - name: Build Qtk
         shell: bash
         run: |
-          cmake -S . -B build/ ${{ matrix.cmake }} && cmake --build build/ \
+          cmake -S . -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON && cmake --build build/ \
             --target qtk-main
 
   Build-Qtk-Assimp-Targets:
@@ -47,9 +47,9 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            cmake: -DCMAKE_PREFIX_PATH="/home/runner/work/qtk/Qt/6.3.1/gcc_64/" -DQTK_UPDATE_SUBMODULES=OFF
+            cmake: -DCMAKE_PREFIX_PATH="/home/runner/work/qtk/Qt/6.3.1/gcc_64/"
           - os: macos-latest
-            cmake: -DCMAKE_PREFIX_PATH="/home/runner/work/qtk/Qt/6.3.1/gcc_64/" -DASSIMP_NEW_INTERFACE=ON -DQTK_UPDATE_SUBMODULES=OFF
+            cmake: -DCMAKE_PREFIX_PATH="/home/runner/work/qtk/Qt/6.3.1/gcc_64/" -DASSIMP_NEW_INTERFACE=ON
 
     runs-on: ${{ matrix.os }}
     steps:

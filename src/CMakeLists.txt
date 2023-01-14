@@ -28,8 +28,6 @@ install(
       "${CMAKE_CURRENT_BINARY_DIR}/QtkConfigVersion.cmake"
     DESTINATION lib/cmake/Qtk
 )
-
-# Install export
 install(
     EXPORT qtk-export
     FILE QtkTargets.cmake
@@ -40,4 +38,7 @@ install(
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VENDOR "Shaun Reed")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Qt OpenGL 3D graphics library.")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/shaunrd0/qtk")
 include(CPack)

@@ -48,6 +48,7 @@ namespace Qtk {
       explicit Object(const char * name, Type type) :
           mName(name), mVBO(QOpenGLBuffer::VertexBuffer), mBound(false),
           mType(type) {
+        initResources();
         setObjectName(name);
       }
 
@@ -55,6 +56,7 @@ namespace Qtk {
       Object(const char * name, const ShapeBase & shape, Type type) :
           mName(name), mVBO(QOpenGLBuffer::VertexBuffer), mShape(shape),
           mBound(false), mType(type) {
+        initResources();
         setObjectName(name);
       }
 

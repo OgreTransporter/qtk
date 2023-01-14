@@ -22,6 +22,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   add_compile_options(/wd4131 /wd4127)
@@ -32,8 +33,8 @@ endif()
 ################################################################################
 project(
     #[[NAME]]   Qtk
-    VERSION     1.0
-    DESCRIPTION "An example project using QT and OpenGL"
+    VERSION     0.2
+    DESCRIPTION "Qt OpenGL library and desktop application."
     LANGUAGES   CXX C
 )
 
@@ -41,16 +42,21 @@ project(
 # Options
 ################################################################################
 option(QTK_DEBUG "Enable debugger" ON)
-option(QTK_UPDATE_SUBMODULES "Update external project (assimp) submodule" OFF)
-option(QTK_SHARED "Build shared libraries" ON)
 option(QTK_BUILD_GUI "Build the Qtk desktop application" ON)
-
-# Options for bringing your own assimp installation; Otherwise not needed
+option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" OFF)
+option(QTK_UPDATE_SUBMODULES "Update external project (assimp) submodule" OFF)
+# Install Qtk for use within Qt Creator projects only, instead of system-wide.
+option(QTK_PREFIX_QTCREATOR "Install Qtk to Qt Creator." OFF)
+# Option for bringing your own assimp installation; Otherwise not needed
 # + If assimp is available system-wide we can just set QTK_UPDATE_SUBMODULES OFF
-option(ASSIMP_NEW_INTERFACE "Use the assimp::assimp interface (WIN / OSX)" OFF)
-message(STATUS "[Qtk] ASSIMP_NEW_INTERFACE=${ASSIMP_NEW_INTERFACE}")
+option(
+    QTK_ASSIMP_NEW_INTERFACE
+    "Use the assimp::assimp interface (WIN / OSX)"
+    OFF
+)
 
 set(QT_DIR "$ENV{HOME}/Code/Clones/Qt/" CACHE PATH "Path to Qt6")
+
 # Qt Designer will look in different locations if WIN / Unix.
 # These paths are for using Qt Designer integrated within Qt Creator.
 # Standalone Qt Designer may use different paths.
@@ -65,12 +71,17 @@ endif()
 
 # This should be set to your Qt6 installation directory.
 set(QT_INSTALL_DIR "${QT_DIR}/6.3.1/gcc_64/" CACHE PATH "Path to Qt6 install")
-# For CLion builds, point CMAKE_PREFIX_PATH to Qt6 install directory
-# + QtCreator will handle this for you if that is used instead
+# Point CMAKE_PREFIX_PATH to Qt6 install directory
+# If Qtk is built within Qt Creator this is not required.
 list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
 
 set(QTK_PLUGIN_LIBRARY_DIR "${QT_PLUGIN_LIBRARY_DIR}")
 set(QTK_PLUGIN_INSTALL_DIR "${QT_PLUGIN_INSTALL_DIR}")
+set(CMAKE_INSTALL_PREFIX  "${CMAKE_SOURCE_DIR}/install")
+if (QTK_PREFIX_QTCREATOR)
+  # TODO: This might be a bit strange and needs more testing.
+  set(CMAKE_INSTALL_PREFIX  "${QT_INSTALL_DIR}")
+endif()
 message(STATUS "[Qtk] CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
 set(QTK_RESOURCES "${CMAKE_SOURCE_DIR}/resources")
 
@@ -149,5 +160,4 @@ if(WIN32)
     file(APPEND ${VSUSER_FILE} "  </PropertyGroup>\n")
     file(APPEND ${VSUSER_FILE} "</Project>\n")
   endif()
-
 endif()

@@ -52,15 +52,12 @@ target_sources(
 if(QTK_DEBUG)
   target_compile_definitions(qtk-library PUBLIC QTK_DEBUG)
 endif()
-if(QTK_SHARED)
-  target_compile_definitions(qtk-library PUBLIC QTK_SHARED)
-endif()
 
 set_target_properties(
     qtk-library PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
-    VERSION ${PROJECT_VERSION}
+      WIN32_EXECUTABLE TRUE
+      MACOSX_BUNDLE TRUE
+      VERSION ${PROJECT_VERSION}
 )
 
 target_link_libraries(

@@ -22,11 +22,16 @@ void ExampleScene::init() {
   auto skybox = new Qtk::Skybox("Skybox");
   setSkybox(skybox);
 
+  auto spartan = new Model(
+      "spartan", "/home/kapper/Code/qtk/resources/models/spartan/spartan.obj");
+  addObject(spartan);
+
   auto mesh = addObject(
-      new Qtk::MeshRenderer("rightTriangle", Triangle(QTK_DRAW_ELEMENTS)));
+      new Qtk::MeshRenderer("rightTriangle", Triangle(QTK_DRAW_ARRAYS)));
   mesh->getTransform().setTranslation(-5.0f, 0.0f, -2.0f);
 
-  addObject(new Qtk::MeshRenderer("centerCube", Cube(QTK_DRAW_ELEMENTS)))
+  // QTK_DRAW_ARRAYS is the default for generic shapes in qtk/shape.h
+  addObject(new Qtk::MeshRenderer("centerCube", Cube(QTK_DRAW_ARRAYS)))
       ->getTransform()
       .setTranslation(-7.0f, 0.0f, -2.0f);
 

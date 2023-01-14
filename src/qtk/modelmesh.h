@@ -9,7 +9,8 @@
 #ifndef QTK_MODELMESH_H
 #define QTK_MODELMESH_H
 
-// QTK
+#include <QOpenGLFunctions>
+
 #include "object.h"
 #include "transform3D.h"
 
