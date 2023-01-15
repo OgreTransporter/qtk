@@ -6,8 +6,8 @@
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
 
-#include "examplescene.h"
 #include "qtkmainwindow.h"
+#include "examplescene.h"
 #include "ui_qtkmainwindow.h"
 
 MainWindow * MainWindow::mainWindow_ = Q_NULLPTR;

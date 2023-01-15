@@ -19,6 +19,7 @@ Key features that are planned:
  * Save / load for scene data. The current inheritance model is temporary.
  * Basic text editor for quickly modifying shaders attached to objects.
  * Shader / object properties panel to modify related settings.
+ * Reduce size of application resources and git references.
 
 The Qtk desktop application provides a model loader using [Assimp](https://assimp.org/) within a Qt widget application.
 
@@ -33,8 +34,8 @@ and see some examples in the `resources/models/` directory.
 Qtk was developed and tested using CLion and [Qt Creator](https://github.com/qt-creator/qt-creator).
 Simply open the root `CMakeLists.txt` with either of these editors and configurations will be loaded.
 
-This project has been ported to Qt6, which is not yet available in Ubuntu apt repositories.
-To run this project, you will *need* to install [Qt6 Open Source Binaries](https://www.qt.io/download-qt-installer) for your system.
+This project has been ported to **Qt 6.5.0**, which is not yet available in Ubuntu apt repositories.
+To run this project, you will *need* to install [Qt6 Open Source Binaries](https://www.qt.io/download-qt-installer) for your system, **version 6.5.0** or later.
 Be sure to take note of the Qt6 installation directory, as we will need it to correctly set our `CMAKE_PREFIX_PATH` in the next steps.
 
 #### Linux
@@ -100,6 +101,13 @@ You can fly around the scene if you hold the right mouse button and use WASD.
 If you see a small triangle floating by a model it represents the light source
 that is being used for the shader rendering the model. These appear on models
 using phong, specular, and diffuse lighting techniques.
+
+Object names can be double-clicked in the tree view panel for quick camera
+navigation. All panels and toolbars are dockable widgets that can be popped out
+and reorganized as needed. Panels can be stacked to create a docked widget with
+tabs. The central widget that provides the camera view into the scene cannot be
+detached from the main window in this way. See the `View` menu to enable debug
+console widgets for open scenes or reopen previously closed panels.
 
 ![](resources/screenshot.png)
 

@@ -27,7 +27,9 @@
  * This cannot be defined within any namespace, but can be called by ctors.
  * See object.h for example.
  */
-inline void initResources() { Q_INIT_RESOURCE(resources); }
+inline void initResources() {
+  Q_INIT_RESOURCE(resources);
+}
 
 namespace Qtk {
   /**
