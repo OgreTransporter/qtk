@@ -7,9 +7,8 @@
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
 
-#include <QFileInfo>
-
 #include "model.h"
+#include "qtkiosystem.h"
 #include "scene.h"
 #include "texture.h"
 
@@ -65,27 +64,27 @@ Model * Qtk::Model::getInstance(const char * name) {
 
 void Model::loadModel(const std::string & path) {
   Assimp::Importer import;
-
-  // JIC a relative path was used, get the absolute file path
-  QFileInfo info(path.c_str());
-  info.makeAbsolute();
-  mDirectory = info.absoluteFilePath().toStdString();
+  // If using a Qt Resource path, use QtkIOSystem for file handling.
+  if(path.front() == ':') {
+    import.SetIOHandler(new QtkIOSystem());
+  }
+  // Used as base path for loading model textures.
+  mDirectory = path.substr(0, path.find_last_of('/'));
 
   // Import the model, converting non-triangular geometry to triangles
   // + And flipping texture UVs, etc..
   // Assimp options: http://assimp.sourceforge.net/lib_html/postprocess_8h.html
   const aiScene * scene = import.ReadFile(
-      mDirectory, aiProcess_Triangulate | aiProcess_FlipUVs
-                      | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace
-                      | aiProcess_OptimizeMeshes | aiProcess_SplitLargeMeshes);
+      path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs
+                        | aiProcess_GenSmoothNormals
+                        | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes
+                        | aiProcess_SplitLargeMeshes);
 
   // If there were errors, print and return
   if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
     qDebug() << "Error::ASSIMP::" << import.GetErrorString() << "\n";
     return;
   }
-  // If there were no errors, find the directory that contains this model
-  mDirectory = mDirectory.substr(0, mDirectory.find_last_of('/'));
 
   // Pass the pointers to the root node and the scene to recursive function
   // + Base case breaks when no nodes left to process on model
@@ -182,7 +181,6 @@ ModelMesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
   if(mesh->mMaterialIndex >= 0) {
     // Get the material attached to the model using Assimp
     aiMaterial * material = scene->mMaterials[mesh->mMaterialIndex];
-
     // Get all diffuse textures from the material
     ModelMesh::Textures diffuseMaps = loadMaterialTextures(
         material, aiTextureType_DIFFUSE, "texture_diffuse");

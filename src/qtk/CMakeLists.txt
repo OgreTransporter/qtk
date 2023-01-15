@@ -12,13 +12,15 @@ set(
     QTK_LIBRARY_PUBLIC_HEADERS
     camera3d.h
     input.h
-    shape.h
     meshrenderer.h
     model.h
     modelmesh.h
     object.h
     qtkapi.h
+    qtkiostream.h
+    qtkiosystem.h
     scene.h
+    shape.h
     skybox.h
     texture.h
     transform3D.h
@@ -28,18 +30,20 @@ set(
     QTK_LIBRARY_SOURCES
     camera3d.cpp
     input.cpp
-    shape.cpp
     meshrenderer.cpp
     model.cpp
     modelmesh.cpp
     object.cpp
+    qtkiostream.cpp
+    qtkiosystem.cpp
     scene.cpp
+    shape.cpp
     skybox.cpp
     texture.cpp
     transform3D.cpp
 )
 
-qt6_add_resources(QTK_LIBRARY_SOURCES "${QTK_RESOURCES}/resources.qrc")
+qt6_add_big_resources(QTK_LIBRARY_SOURCES "${QTK_RESOURCES}/resources.qrc")
 qt_add_library(qtk-library STATIC)
 target_sources(qtk-library PRIVATE ${QTK_LIBRARY_SOURCES})
 target_sources(

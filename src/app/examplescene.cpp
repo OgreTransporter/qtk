@@ -41,7 +41,8 @@ void ExampleScene::init() {
   myCube->setColor(RED);
   addObject(myCube);
 
-  auto mySpartan = new Model("My spartan", PATH("/models/spartan/spartan.obj"));
+  auto mySpartan =
+      new Model("My spartan", ":/models/models/spartan/spartan.obj");
   mySpartan->getTransform().setTranslation(0.0f, 0.5f, 0.0f);
   mySpartan->getTransform().setScale(0.5f);
   addObject(mySpartan);
@@ -79,35 +80,30 @@ void ExampleScene::init() {
   // 3D Model loading
 
   auto model = addObject(
-      new Qtk::Model("backpack", PATH("/models/backpack/backpack.obj")));
-  auto test = PATH("/models/backpack/backpack.obj");
+      new Qtk::Model("backpack", ":/models/models/backpack/backpack.obj"));
   // Sometimes model textures need flipped in certain directions
   model->flipTexture("diffuse.jpg", false, true);
   model->getTransform().setTranslation(0.0f, 0.0f, -10.0f);
 
-  model = addObject(new Qtk::Model("bird", PATH("/models/bird/bird.obj")));
+  model = addObject(new Qtk::Model("bird", ":/models/models/bird/bird.obj"));
   model->getTransform().setTranslation(2.0f, 2.0f, -10.0f);
   // Sometimes the models are very large
   model->getTransform().scale(0.0025f);
   model->getTransform().rotate(-110.0f, 0.0f, 1.0f, 0.0f);
 
-  model = addObject(new Qtk::Model("lion", PATH("/models/lion/lion.obj")));
-  model->getTransform().setTranslation(-3.0f, -1.0f, -10.0f);
-  model->getTransform().scale(0.15f);
-
   model = addObject(
-      new Qtk::Model("alien", PATH("/models/alien-hominid/alien.obj")));
+      new Qtk::Model("alien", ":/models/models/alien-hominid/alien.obj"));
   model->getTransform().setTranslation(2.0f, -1.0f, -5.0f);
   model->getTransform().scale(0.15f);
 
   model =
-      addObject(new Qtk::Model("scythe", PATH("/models/scythe/scythe.obj")));
+      addObject(new Qtk::Model("scythe", ":/models/models/scythe/scythe.obj"));
   model->getTransform().setTranslation(-6.0f, 0.0f, -10.0f);
   model->getTransform().rotate(-90.0f, 1.0f, 0.0f, 0.0f);
   model->getTransform().rotate(90.0f, 0.0f, 1.0f, 0.0f);
 
   model = addObject(
-      new Qtk::Model("masterChief", PATH("/models/spartan/spartan.obj")));
+      new Qtk::Model("masterChief", ":/models/models/spartan/spartan.obj"));
   model->getTransform().setTranslation(-1.5f, 0.5f, -2.0f);
 
 
@@ -233,7 +229,7 @@ void ExampleScene::init() {
 
   /* Test alien Model with phong lighting and specular mapping. */
   model = addObject(new Qtk::Model(
-      "alienTest", PATH("/models/alien-hominid/alien.obj"),
+      "alienTest", ":/models/models/alien-hominid/alien.obj",
       ":/shaders/model-specular.vert", ":/shaders/model-specular.frag"));
   model->getTransform().setTranslation(3.0f, -1.0f, 10.0f);
   model->getTransform().scale(0.15f);
@@ -259,7 +255,7 @@ void ExampleScene::init() {
 
   /* Test spartan Model with phong lighting, specular and normal mapping. */
   model = addObject(new Qtk::Model(
-      "spartanTest", PATH("/models/spartan/spartan.obj"),
+      "spartanTest", ":/models/models/spartan/spartan.obj",
       ":/shaders/model-normals.vert", ":/shaders/model-normals.frag"));
   model->getTransform().setTranslation(0.0f, -1.0f, 10.0f);
   model->getTransform().scale(2.0f);

@@ -15,11 +15,9 @@ set(
     debugconsole.cpp debugconsole.ui
     toolbox.cpp toolbox.ui
     treeview.cpp treeview.ui
-    qtkmainwindow.cpp qtkmainwindow.ui
 )
 set(
     QTK_PLUGIN_LIBRARY_HEADERS
-    qtkmainwindow.h
     qtkwidget.h
     debugconsole.h
     toolbox.h
@@ -53,16 +51,16 @@ install(
 # Qtk Widget Collection Plugin
 ################################################################################
 # Create a Qt Designer plugin for a collection of widgets from our library.
-qt_add_plugin(qtk-collection)
+qt_add_plugin(qtk_collection STATIC)
 target_sources(
-    qtk-collection PRIVATE
+    qtk_collection PRIVATE
     widgetplugincollection.cpp widgetplugincollection.h
     widgetplugin.cpp widgetplugin.h
 )
-target_link_libraries(qtk-collection PUBLIC qtk-plugin-library)
+target_link_libraries(qtk_collection PUBLIC qtk-plugin-library)
 
 install(
-    TARGETS qtk-collection
+    TARGETS qtk_collection
     RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
     BUNDLE DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
     LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
@@ -75,10 +73,11 @@ install(
 set(
     QTK_APP_SOURCES
     examplescene.cpp examplescene.h
+    qtkmainwindow.cpp qtkmainwindow.h qtkmainwindow.ui
     main.cpp
 )
 
-qt6_add_resources(QTK_APP_SOURCES "${QTK_RESOURCES}/resources.qrc")
+qt6_add_big_resources(QTK_APP_SOURCES "${QTK_RESOURCES}/resources.qrc")
 configure_file(
     resources.h.in
     "${CMAKE_CURRENT_BINARY_DIR}/resources.h"
@@ -105,10 +104,10 @@ install(
 
 qt_generate_deploy_app_script(
     TARGET qtk-main
-    FILENAME_VARIABLE deploy_script
+    FILENAME_VARIABLE QTK_DEPLOY_SCRIPT
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
-install(SCRIPT ${deploy_script})
+install(SCRIPT ${QTK_DEPLOY_SCRIPT})
 
 if(WIN32)
   get_target_property(_qt6_qmake_location Qt6::qmake IMPORTED_LOCATION)

@@ -19,8 +19,8 @@ QImage * OpenGLTextureFactory::initImage(
   QImageReader::setAllocationLimit(512);
   auto loadedImage = new QImage(QImage(image).mirrored(flipX, flipY));
   if(loadedImage->isNull()) {
-    qDebug() << "Error loading image: " << image << "\n";
-    qDebug() << QImageReader::supportedImageFormats();
+    qDebug() << "[Qtk::OpenGLTextureFactory] Error loading image: " << image
+             << "\nSupported types: " << QImageReader::supportedImageFormats();
     return Q_NULLPTR;
   }
 
