@@ -24,8 +24,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  add_compile_options(/wd4131 /wd4127)
+if(MSVC)
+  add_compile_options(/WX:NO /wd4131 /wd4127)
 endif()
 
 ################################################################################

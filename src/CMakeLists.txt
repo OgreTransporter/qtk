@@ -29,7 +29,7 @@ install(
     DESTINATION lib/cmake/Qtk
 )
 install(
-    EXPORT qtk-export
+    EXPORT qtk_export
     FILE QtkTargets.cmake
     NAMESPACE Qtk::
     DESTINATION lib/cmake/Qtk
@@ -43,6 +43,11 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Qt OpenGL 3D graphics library.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/shaunrd0/qtk")
 set(CPACK_SOURCE_IGNORE_FILES build;install;\.git;\.github;\.idea)
 set(CPACK_PACKAGE_DIRECTORY packages/)
+
+# OSX
+set(CPACK_BUNDLE_NAME Qtk)
+#set(CPACK_BUNDLE_PLIST )
+#set(CPACK_BUNDLE_ICON )
 if(WIN32)
   set(CPACK_SOURCE_GENERATOR ZIP)
 else()

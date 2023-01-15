@@ -23,16 +23,16 @@ set(
     toolbox.h
     treeview.h
 )
-qt_add_library(qtk-plugin-library STATIC)
+qt_add_library(qtk_plugin_library STATIC)
 target_sources(
-    qtk-plugin-library PRIVATE
+    qtk_plugin_library PRIVATE
     "${QTK_PLUGIN_LIBRARY_SOURCES}"
     "${QTK_PLUGIN_LIBRARY_HEADERS}"
 )
-target_link_libraries(qtk-plugin-library PUBLIC Qt6::UiPlugin qtk-library)
+target_link_libraries(qtk_plugin_library PUBLIC Qt6::UiPlugin qtk_library)
 
 install(
-    TARGETS qtk-plugin-library
+    TARGETS qtk_plugin_library
     BUNDLE DESTINATION lib
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
@@ -40,7 +40,7 @@ install(
 )
 
 install(
-    TARGETS qtk-plugin-library
+    TARGETS qtk_plugin_library
     BUNDLE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
     LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
     RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
@@ -57,7 +57,7 @@ target_sources(
     widgetplugincollection.cpp widgetplugincollection.h
     widgetplugin.cpp widgetplugin.h
 )
-target_link_libraries(qtk_collection PUBLIC qtk-plugin-library)
+target_link_libraries(qtk_collection PUBLIC qtk_plugin_library)
 
 install(
     TARGETS qtk_collection
@@ -84,11 +84,11 @@ configure_file(
     @ONLY
 )
 
-qt_add_executable(qtk-main ${QTK_APP_SOURCES})
-target_link_libraries(qtk-main PRIVATE qtk-plugin-library)
+qt_add_executable(qtk_main ${QTK_APP_SOURCES})
+target_link_libraries(qtk_main PRIVATE qtk_plugin_library)
 
 set_target_properties(
-    qtk-main PROPERTIES
+    qtk_main PROPERTIES
       WIN32_EXECUTABLE TRUE
       MACOSX_BUNDLE TRUE
       MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -96,14 +96,14 @@ set_target_properties(
 )
 
 install(
-    TARGETS qtk-main
+    TARGETS qtk_main
     BUNDLE DESTINATION bin
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION bin/lib
 )
 
 qt_generate_deploy_app_script(
-    TARGET qtk-main
+    TARGET qtk_main
     FILENAME_VARIABLE QTK_DEPLOY_SCRIPT
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
@@ -121,16 +121,16 @@ if(WIN32)
 
   if(TARGET Qt6::windeployqt)
     add_custom_command(
-        TARGET qtk-main
+        TARGET qtk_main
         POST_BUILD
         COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}
-        COMMAND Qt6::windeployqt --dir "${CMAKE_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:qtk-main>/$<TARGET_FILE_NAME:qtk-main>"
+        COMMAND Qt6::windeployqt --dir "${CMAKE_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:qtk_main>/$<TARGET_FILE_NAME:qtk_main>"
     )
     install(DIRECTORY "${CMAKE_BINARY_DIR}/windeployqt/" DESTINATION bin)
   endif()
 
   if(MSVC AND TARGET Qt6::qmake)
-    set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk-main.vcxproj.user")
+    set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_main.vcxproj.user")
     file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/extern/assimp/assimp/bin" assimp_bin)
     file(WRITE ${VSUSER_FILE} "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
     file(APPEND ${VSUSER_FILE} "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
