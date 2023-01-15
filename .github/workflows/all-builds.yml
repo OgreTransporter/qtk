@@ -32,31 +32,13 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: crazy-max/ghaction-chocolatey@v2
         with:
-          args: install pkgconfiglite
+          args: install pkgconfiglite --checksum e87b5ea3c9142256af60f2d5b917aa63b571e6a0 --checksum-type sha1
 
       - name: Build Qtk
         shell: bash
         run: |
           cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON
-          cmake --build build/
-
-      - name: Package Qtk
-        shell: bash
-        run: |
-          cmake --build build/ --target package
-
-      - name: Package Qtk Sources
-        if: matrix.os != 'macos-latest'
-        shell: bash
-        run: |
-          cmake --build build/ --target package_source
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: qtk-packages-${{ matrix.os }}
-          path: |
-            build/packages/
-            !build/packages/_CPack_Packages/*
+          cmake --build build/ -- -j $(nproc)
 
       - name: Install Qtk
         shell: bash
@@ -64,9 +46,30 @@ jobs:
           cmake --install build/
 
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: qtk-${{ matrix.os }}
           path: install/*
+
+      - name: Package Qtk
+        shell: bash
+        run: |
+          cd build/
+          cmake --build . --target package -- -j $(nproc)
+
+#      - name: Package Qtk Sources
+#        if: matrix.os != 'macos-latest'
+#        shell: bash
+#        run: |
+#          cmake --build build/ --target package_source
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: qtk-packages-${{ matrix.os }}
+          path: |
+            build/packages/
+            !build/packages/_CPack_Packages/*
 
   Build-Qtk-Assimp-Targets:
     strategy:
@@ -103,49 +106,12 @@ jobs:
       - name: Build Qtk
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} && cmake --build build/ --target qtk-main
+          cmake -B build/ ${{ matrix.cmake }} && cmake --build build/ -- -j $(nproc)
 
   # TODO: Enable with tag only when done testing
 #  Release-Qtk:
 #    needs: Build-Qtk
-#    if: "always()"
 #    strategy:
 #      fail-fast: false
 #      matrix:
 #        os: [ubuntu-latest, windows-latest, macos-latest]
-#        include:
-#          - os: ubuntu-latest
-#            cqt: CQtDeployer.deb
-#            url: https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2277/CQtDeployer_1.6.2277.ecc6eed_Linux_x86_64.deb
-#            qmake: /home/runner/work/qtk/Qt/6.5.0/gcc_64/bin/qmake
-#          - os: windows-latest
-#            cqt: CQtDeployer.exe
-#            url: https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2277/CQtDeployer_1.6.2277.ecc6eed_Windows_AMD64.exe
-#            qmake: D:/a/qtk/qtk/Qt/6.5.0/mingw81_64/bin/qmake
-#          - os: macos-latest
-#            cqt: CQtDeployer.run
-#            url: https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2277/CQtDeployer_1.6.2277.ecc6eed_Linux_x86_64.run
-#            qmake: /home/runner/work/qtk/Qt/6.5.0/gcc_64/bin/qmake
-#    runs-on: ${{ matrix.os }}
-#
-#    steps:
-#      - uses: actions/download-artifact@v3
-#        with:
-#          name: qtk-${{ matrix.os }}
-#
-#      - name: Install Qt
-#        uses: jurplel/install-qt-action@v2
-#        with:
-#          version: '6.5.0'
-#
-#      - name: Package Qtk
-#        shell: bash
-#        run: |
-#          wget -O ${{ matrix.cqt }} ${{ matrix.url }}
-#          apt install -y ./${{ matrix.cqt }}
-#          cqtdeployer -bin qtk-main -qmake ${{ matrix.qmake }}
-#
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: qtk-installer-${{ matrix.os }}
-#          path: DistributionKit/

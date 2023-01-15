@@ -43,11 +43,14 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Qt OpenGL 3D graphics library.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/shaunrd0/qtk")
 set(CPACK_SOURCE_IGNORE_FILES build;install;\.git;\.github;\.idea)
 set(CPACK_PACKAGE_DIRECTORY packages/)
+set(CPACK_PACKAGE_CONTACT "shaunreed.com")
+# TODO: This works for debian packages but the script installs to the wrong dir.
+set(CPACK_INSTALL_SCRIPTS ${QTK_DEPLOY_SCRIPT})
 
 # OSX
 set(CPACK_BUNDLE_NAME Qtk)
-#set(CPACK_BUNDLE_PLIST )
-#set(CPACK_BUNDLE_ICON )
+set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/bin/qtk_main.app/Contents/Info.plist)
+set(CPACK_BUNDLE_ICON ${QTK_OSX_ICONS})
 if(WIN32)
   set(CPACK_SOURCE_GENERATOR ZIP)
 else()

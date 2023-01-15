@@ -22,10 +22,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#set(CMAKE_MACOSX_BUNDLE ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(MSVC)
-  add_compile_options(/WX:NO /wd4131 /wd4127)
+  set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
+  add_compile_options(-warnnotaserror)
+  add_compile_options(/wd4131 /wd4127)
 endif()
 
 ################################################################################
@@ -84,6 +87,7 @@ if (QTK_PREFIX_QTCREATOR)
 endif()
 message(STATUS "[Qtk] CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
 set(QTK_RESOURCES "${CMAKE_SOURCE_DIR}/resources")
+set(QTK_OSX_ICONS ${CMAKE_SOURCE_DIR}/resources/icons/osx/kilroy.icns)
 
 # Print all QTK options and their values.
 get_cmake_property(VAR_NAMES VARIABLES)
@@ -112,10 +116,9 @@ if(NOT Qt6_FOUND)
 endif()
 
 # Find Assimp
+set(ASSIMP_BUILD_TESTS OFF)
 if(QTK_UPDATE_SUBMODULES)
   message(STATUS "[Qtk] Updating submodules...")
-  set(ASSIMP_BUILD_TESTS OFF)
-  set(ASSIMP_INSTALL OFF)
   submodule_update("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
 else()
