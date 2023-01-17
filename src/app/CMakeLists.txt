@@ -33,18 +33,18 @@ target_link_libraries(qtk_plugin_library PUBLIC Qt6::UiPlugin qtk_library)
 
 install(
     TARGETS qtk_plugin_library
-    BUNDLE DESTINATION lib
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     RUNTIME DESTINATION bin
 )
 
+# Install plugin library to Qt Creator for Designer plugin integration.
 install(
     TARGETS qtk_plugin_library
-    BUNDLE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    EXCLUDE_FROM_ALL
     LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
     ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
 )
 
 ################################################################################
@@ -61,9 +61,17 @@ target_link_libraries(qtk_collection PUBLIC qtk_plugin_library)
 
 install(
     TARGETS qtk_collection
-    RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-    BUNDLE DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    RUNTIME DESTINATION bin
+)
+
+install(
+    TARGETS qtk_collection
+    EXCLUDE_FROM_ALL
     LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
 )
 
 ################################################################################
@@ -103,8 +111,9 @@ set_target_properties(
 install(
     TARGETS qtk_main
     BUNDLE DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
     RUNTIME DESTINATION bin
-    LIBRARY DESTINATION bin/lib
 )
 
 qt_generate_deploy_app_script(

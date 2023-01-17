@@ -25,11 +25,7 @@ endif()
 set(QTK_PATH /usr/local CACHE PATH  "Path to installation of Qtk")
 
 # If you did not install Qt6 on a system path, point cmake to installation.
-set(
-    QT_INSTALL_DIR
-    "/home/kapper/Code/Clones/Qt/6.3.1/gcc_64/"
-    CACHE PATH "Path to Qt6 install"
-)
+set(QT_INSTALL_DIR "$ENV{HOME}/Qt/6.5.0/gcc_64/" CACHE PATH "Path to Qt6")
 
 ################################################################################
 # Project
@@ -43,7 +39,12 @@ project(
 
 list(APPEND CMAKE_PREFIX_PATH "${QTK_PATH}")
 list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
-find_package(Qtk 0.2 REQUIRED)
+
+# Allow add_subdirectory on this project to use target ALIAS if available.
+# If this example project is opened standalone we will use find_package.
+if(NOT TARGET Qtk::qtk_library)
+  find_package(Qtk 0.2 REQUIRED)
+endif()
 
 # Print all QTK variables
 get_cmake_property(VAR_NAMES VARIABLES)
@@ -64,4 +65,4 @@ set(
 
 add_executable(example ${EXAMPLE_SOURCES})
 target_link_libraries(example PUBLIC Qt6::Widgets Qt6::OpenGLWidgets Qt6::Core)
-target_link_libraries(example PUBLIC Qtk::qtk-library)
+target_link_libraries(example PUBLIC Qtk::qtk_library)

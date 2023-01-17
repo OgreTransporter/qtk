@@ -49,7 +49,8 @@ target_sources(qtk_library PRIVATE ${QTK_LIBRARY_SOURCES})
 target_sources(
     qtk_library PUBLIC
     FILE_SET HEADERS
-      BASE_DIRS "${CMAKE_SOURCE_DIR}/src"
+      BASE_DIRS $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+      BASE_DIRS $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
       FILES ${QTK_LIBRARY_PUBLIC_HEADERS}
 )
 
@@ -59,8 +60,6 @@ endif()
 
 set_target_properties(
     qtk_library PROPERTIES
-      WIN32_EXECUTABLE TRUE
-      MACOSX_BUNDLE TRUE
       VERSION ${PROJECT_VERSION}
 )
 
@@ -85,17 +84,16 @@ install(
     # Associate qtk_library target with qtk-export
     EXPORT qtk_export
     FILE_SET HEADERS DESTINATION include
-    BUNDLE DESTINATION lib
+    INCLUDES DESTINATION include
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
 )
 
 ## Install qtk_library to Qt Designer to support widget plugins.
 install(
     TARGETS qtk_library
-    BUNDLE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+    EXCLUDE_FROM_ALL
     LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
     ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
     RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"

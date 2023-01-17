@@ -14,25 +14,25 @@ if (QTK_BUILD_GUI)
 endif()
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/QtkConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
     COMPATIBILITY AnyNewerVersion
 )
 configure_package_config_file(
     "${CMAKE_SOURCE_DIR}/cmake/templates/Config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/QtkConfig.cmake"
-    INSTALL_DESTINATION lib/cmake/Qtk
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
 install(
     FILES
-      "${CMAKE_CURRENT_BINARY_DIR}/QtkConfig.cmake"
-      "${CMAKE_CURRENT_BINARY_DIR}/QtkConfigVersion.cmake"
-    DESTINATION lib/cmake/Qtk
+      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 install(
     EXPORT qtk_export
-    FILE QtkTargets.cmake
-    NAMESPACE Qtk::
-    DESTINATION lib/cmake/Qtk
+      FILE ${PROJECT_NAME}Targets.cmake
+      NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
@@ -41,19 +41,24 @@ set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VENDOR "Shaun Reed")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Qt OpenGL 3D graphics library.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/shaunrd0/qtk")
-set(CPACK_SOURCE_IGNORE_FILES build;install;\.git;\.github;\.idea)
+set(CPACK_SOURCE_IGNORE_FILES build*;install;\.git;\.github;\.idea)
 set(CPACK_PACKAGE_DIRECTORY packages/)
 set(CPACK_PACKAGE_CONTACT "shaunreed.com")
-# TODO: This works for debian packages but the script installs to the wrong dir.
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
+set(CPACK_THREADS 0)
+
+# Debian
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${CPACK_PACKAGE_HOMEPAGE_URL})
 set(CPACK_INSTALL_SCRIPTS ${QTK_DEPLOY_SCRIPT})
 
 # OSX
-set(CPACK_BUNDLE_NAME Qtk)
-set(CPACK_BUNDLE_PLIST ${CMAKE_BINARY_DIR}/bin/qtk_main.app/Contents/Info.plist)
+set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
+set(CPACK_BUNDLE_PLIST $<TARGET_BUNDLE_CONTENT_DIR:qtk_main>/Info.plist)
 set(CPACK_BUNDLE_ICON ${QTK_OSX_ICONS})
 if(WIN32)
   set(CPACK_SOURCE_GENERATOR ZIP)
 else()
   set(CPACK_SOURCE_GENERATOR TGZ)
 endif()
+
 include(CPack)

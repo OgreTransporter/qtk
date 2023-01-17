@@ -46,7 +46,7 @@ project(
 ################################################################################
 option(QTK_DEBUG "Enable debugger" ON)
 option(QTK_BUILD_GUI "Build the Qtk desktop application" ON)
-option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" OFF)
+option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" ON)
 option(QTK_UPDATE_SUBMODULES "Update external project (assimp) submodule" OFF)
 # Install Qtk for use within Qt Creator projects only, instead of system-wide.
 option(QTK_PREFIX_QTCREATOR "Install Qtk to Qt Creator." OFF)
@@ -119,6 +119,7 @@ endif()
 set(ASSIMP_BUILD_TESTS OFF)
 if(QTK_UPDATE_SUBMODULES)
   message(STATUS "[Qtk] Updating submodules...")
+  set(ASSIMP_INSTALL OFF)
   submodule_update("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
 else()
@@ -133,3 +134,9 @@ endif()
 # Qtk
 ################################################################################
 add_subdirectory(src)
+
+if(QTK_BUILD_EXAMPLE)
+  # Create a namespaced alias for linking with qtk_library in the example.
+  add_library(${PROJECT_NAME}::qtk_library ALIAS qtk_library)
+  add_subdirectory(example-app)
+endif()
