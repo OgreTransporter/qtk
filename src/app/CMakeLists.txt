@@ -39,13 +39,13 @@ install(
 )
 
 # Install plugin library to Qt Creator for Designer plugin integration.
-install(
-    TARGETS qtk_plugin_library
-    EXCLUDE_FROM_ALL
-    LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-)
+#install(
+#    TARGETS qtk_plugin_library
+#    EXCLUDE_FROM_ALL
+#    LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+#    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+#    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+#)
 
 ################################################################################
 # Qtk Widget Collection Plugin
@@ -66,13 +66,13 @@ install(
     RUNTIME DESTINATION bin
 )
 
-install(
-    TARGETS qtk_collection
-    EXCLUDE_FROM_ALL
-    LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-    RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-)
+#install(
+#    TARGETS qtk_collection
+#    EXCLUDE_FROM_ALL
+#    LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+#    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+#    RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+#)
 
 ################################################################################
 # Final Qtk Application
@@ -124,25 +124,6 @@ qt_generate_deploy_app_script(
 install(SCRIPT ${QTK_DEPLOY_SCRIPT})
 
 if(WIN32)
-  get_target_property(_qt6_qmake_location Qt6::qmake IMPORTED_LOCATION)
-  execute_process(
-      COMMAND "${_qt6_qmake_location}" -query QT_INSTALL_PREFIX
-      RESULT_VARIABLE return_code
-      OUTPUT_VARIABLE qt6_install_prefix
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-  file(TO_NATIVE_PATH "${qt6_install_prefix}/bin" qt6_install_prefix)
-
-  if(TARGET Qt6::windeployqt)
-    add_custom_command(
-        TARGET qtk_main
-        POST_BUILD
-        COMMAND set PATH=%PATH%$<SEMICOLON>${qt6_install_prefix}
-        COMMAND Qt6::windeployqt --dir "${CMAKE_BINARY_DIR}/windeployqt" "$<TARGET_FILE_DIR:qtk_main>/$<TARGET_FILE_NAME:qtk_main>"
-    )
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/windeployqt/" DESTINATION bin)
-  endif()
-
   if(MSVC AND TARGET Qt6::qmake)
     set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_main.vcxproj.user")
     file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/extern/assimp/assimp/bin" assimp_bin)

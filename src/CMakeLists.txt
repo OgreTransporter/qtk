@@ -44,9 +44,10 @@ set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/shaunrd0/qtk")
 set(CPACK_SOURCE_IGNORE_FILES build*;install;\.git;\.github;\.idea)
 set(CPACK_PACKAGE_DIRECTORY packages/)
 set(CPACK_PACKAGE_CONTACT "shaunreed.com")
-set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
+#set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
 set(CPACK_THREADS 0)
-
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Qtk")
+set(CPACK_COMPONENTS_ALL Unspecified)
 # Debian
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${CPACK_PACKAGE_HOMEPAGE_URL})
 set(CPACK_INSTALL_SCRIPTS ${QTK_DEPLOY_SCRIPT})

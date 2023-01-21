@@ -35,27 +35,43 @@ jobs:
           args: install pkgconfiglite --checksum e87b5ea3c9142256af60f2d5b917aa63b571e6a0 --checksum-type sha1
 
       - name: Build Qtk
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON
-          cmake --build build/ -- -j $(nproc)
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF
+          cmake --build build/ --config Release
+
+      - name: Build Qtk
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF
+          cmake --build build/ --config Release -- -j $(nproc)
 
       - name: Install Qtk
         shell: bash
         run: |
-          cmake --install build/
+          cmake --install build/ --config Release
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: qtk-${{ matrix.os }}
+          name: qtk-${{ matrix.os }}-install
           path: install/*
 
       - name: Package Qtk
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
           cd build/
-          cmake --build . --target package -- -j $(nproc)
+          cmake --build . --target package --config Release
+
+      - name: Package Qtk
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          cd build/
+          cmake --build . --target package --config Release -- -j $(nproc)
 
 #      - name: Package Qtk Sources
 #        if: matrix.os != 'macos-latest'
@@ -64,12 +80,19 @@ jobs:
 #          cmake --build build/ --target package_source
 
       - uses: actions/upload-artifact@v3
+        if: ${{ failure() && matrix.os == 'windows-latest' }}
+        with:
+          name: qtk-packages-${{ matrix.os }}
+          path: |
+            build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: qtk-packages-${{ matrix.os }}
           path: |
             build/packages/
-            !build/packages/_CPack_Packages/*
+            !build/packages/_cpack_packages/*
 
   Build-Qtk-Assimp-Targets:
     strategy:
@@ -104,9 +127,18 @@ jobs:
           sudo apt install libassimp-dev
 
       - name: Build Qtk
+        if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} && cmake --build build/ -- -j $(nproc)
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF
+          cmake --build build/ --config Release
+
+      - name: Build Qtk
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: |
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF
+          cmake --build build/ --config Release -- -j $(nproc)
 
   # TODO: Enable with tag only when done testing
 #  Release-Qtk:

@@ -18,7 +18,7 @@ namespace Ui {
 }
 
 namespace Qtk {
-  class QDESIGNER_WIDGET_EXPORT ToolBox : public QDockWidget {
+  class ToolBox : public QDockWidget {
       Q_OBJECT
 
     public:

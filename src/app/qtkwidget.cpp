@@ -42,9 +42,7 @@ QtkWidget::QtkWidget(QWidget * parent, const QString & name, Scene * scene) :
   // Set the size of the depth bufer for glEnable(GL_DEPTH_TEST)
   format.setDepthBufferSize(16);
   // If QTK_DEBUG is set, enable debug context
-#ifdef QTK_DEBUG
   format.setOption(QSurfaceFormat::DebugContext);
-#endif
   setFormat(format);
   setFocusPolicy(Qt::ClickFocus);
 }
@@ -73,7 +71,6 @@ void QtkWidget::initializeGL() {
   connect(this, SIGNAL(frameSwapped()), this, SLOT(update()));
 
   // Initialize OpenGL debug context
-#ifdef QTK_DEBUG
   mDebugLogger = new QOpenGLDebugLogger(this);
   if(mDebugLogger->initialize()) {
     qDebug() << "GL_DEBUG Debug Logger" << mDebugLogger << "\n";
@@ -82,7 +79,6 @@ void QtkWidget::initializeGL() {
         SLOT(messageLogged(QOpenGLDebugMessage)));
     mDebugLogger->startLogging();
   }
-#endif  // QTK_DEBUG
 
   printContextInformation();
 

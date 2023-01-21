@@ -47,12 +47,14 @@ if(NOT TARGET Qtk::qtk_library)
 endif()
 
 # Print all QTK variables
-get_cmake_property(VAR_NAMES VARIABLES)
-list(FILTER VAR_NAMES INCLUDE REGEX "^Q[tT][kK]_.*$")
-list(SORT VAR_NAMES)
-foreach(VAR_NAME ${VAR_NAMES})
-  message(STATUS "[Qtk] ${VAR_NAME}=${${VAR_NAME}}")
-endforeach()
+if (NOT Qtk_IS_TOP_LEVEL)
+  get_cmake_property(VAR_NAMES VARIABLES)
+  list(FILTER VAR_NAMES INCLUDE REGEX "^Q[tT][kK]_.*$")
+  list(SORT VAR_NAMES)
+  foreach(VAR_NAME ${VAR_NAMES})
+    message(STATUS "[Qtk] ${VAR_NAME}=${${VAR_NAME}}")
+  endforeach()
+endif()
 
 find_package(Qt6 COMPONENTS Core Widgets OpenGLWidgets REQUIRED)
 

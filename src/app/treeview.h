@@ -22,7 +22,7 @@ namespace Ui {
 }
 
 namespace Qtk {
-  class QDESIGNER_WIDGET_EXPORT TreeView : public QDockWidget {
+  class TreeView : public QDockWidget {
       Q_OBJECT
 
     public:

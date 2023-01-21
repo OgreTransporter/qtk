@@ -156,7 +156,6 @@ namespace Qtk {
        */
       void update();
 
-#ifdef QTK_DEBUG
       /**
        * Called when the `messageLogged` signal is caught.
        * See definition of initializeGL()
@@ -164,7 +163,6 @@ namespace Qtk {
        * @param msg The message logged.
        */
       void messageLogged(const QOpenGLDebugMessage & msg);
-#endif
 
     private:
       /*************************************************************************
@@ -181,20 +179,16 @@ namespace Qtk {
        */
       static void updateCameraInput();
 
-#ifdef QTK_DEBUG
       /**
        * Prints OpenGL context information at start of debug session.
        */
       void printContextInformation();
-#endif
 
       /*************************************************************************
        * Private Members
        ************************************************************************/
 
-#ifdef QTK_DEBUG
       QOpenGLDebugLogger * mDebugLogger;
-#endif
       Qtk::Scene * mScene;
       Qtk::DebugConsole * mConsole;
       bool mConsoleActive = false;

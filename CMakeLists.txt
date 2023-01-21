@@ -22,12 +22,11 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-#set(CMAKE_MACOSX_BUNDLE ON)
+set(CMAKE_MACOSX_BUNDLE ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(MSVC)
+if(WIN32)
   set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
-  add_compile_options(-warnnotaserror)
   add_compile_options(/wd4131 /wd4127)
 endif()
 
@@ -57,6 +56,12 @@ option(
     "Use the assimp::assimp interface (WIN / OSX)"
     OFF
 )
+
+if(NOT QTK_DEBUG)
+  set(CMAKE_BUILD_TYPE Release)
+else()
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
 
 set(QT_DIR "$ENV{HOME}/Qt/" CACHE PATH "Path to Qt6")
 
@@ -116,10 +121,14 @@ if(NOT Qt6_FOUND)
 endif()
 
 # Find Assimp
-set(ASSIMP_BUILD_TESTS OFF)
+set(ASSIMP_BUILD_TESTS OFF CACHE STRING "Do not build assimp tests." FORCE)
+set(ASSIMP_INSTALL ON CACHE STRING "Use assimp as a submodule." FORCE)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE STRING "No warnings as errors." FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE STRING "Do not postfix assimp with -dev" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE STRING "Build static assimp libs" FORCE)
+set(ASSIMP_OPT_BUILD_PACKAGES ON CACHE STRING "Build static assimp libs" FORCE)
 if(QTK_UPDATE_SUBMODULES)
   message(STATUS "[Qtk] Updating submodules...")
-  set(ASSIMP_INSTALL OFF)
   submodule_update("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
   add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
 else()
