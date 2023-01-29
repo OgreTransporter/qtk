@@ -38,20 +38,20 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
           cmake --build build/ --config Release
 
       - name: Build Qtk
         if: matrix.os != 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
           cmake --build build/ --config Release -- -j $(nproc)
 
       - name: Install Qtk
         shell: bash
         run: |
-          cmake --install build/ --config Release
+          cmake --install build/ --config Release --prefix=$(pwd)/install
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -130,14 +130,14 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
           cmake --build build/ --config Release
 
       - name: Build Qtk
         if: matrix.os != 'windows-latest'
         shell: bash
         run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF
+          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
           cmake --build build/ --config Release -- -j $(nproc)
 
   # TODO: Enable with tag only when done testing
