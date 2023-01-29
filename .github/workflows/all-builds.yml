@@ -92,7 +92,7 @@ jobs:
           name: qtk-packages-${{ matrix.os }}
           path: |
             build/packages/
-            !build/packages/_cpack_packages/*
+            !build/packages/_CPack_Packages/*
 
   Build-Qtk-Assimp-Targets:
     strategy:

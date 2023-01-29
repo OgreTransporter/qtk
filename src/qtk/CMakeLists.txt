@@ -44,7 +44,7 @@ set(
 )
 
 qt6_add_big_resources(QTK_LIBRARY_SOURCES "${QTK_RESOURCES}/resources.qrc")
-qt_add_library(qtk_library STATIC)
+qt_add_library(qtk_library STATIC EXCLUDE_FROM_ALL)
 target_sources(qtk_library PRIVATE ${QTK_LIBRARY_SOURCES})
 target_sources(
     qtk_library PUBLIC
@@ -78,24 +78,5 @@ if(WIN32)
   target_link_libraries(qtk_library PUBLIC OpenGL::GL)
 endif()
 
-# System install for qtk_library
-install(
-    TARGETS qtk_library
-    # Associate qtk_library target with qtk-export
-    EXPORT qtk_export
-    COMPONENT libqtk
-    FILE_SET HEADERS DESTINATION include
-    INCLUDES DESTINATION include
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib/static
-    RUNTIME DESTINATION bin
-)
-
+#install(SCRIPT ${LIBQTK_DEPLOY_SCRIPT} COMPONENT libqtk)
 ## Install qtk_library to Qt Designer to support widget plugins.
-#install(
-#    TARGETS qtk_library
-#    EXCLUDE_FROM_ALL
-#    LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-#    ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-#    RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-#)

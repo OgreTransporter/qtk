@@ -7,12 +7,6 @@
 cmake_minimum_required(VERSION 3.23)
 
 ################################################################################
-# Includes
-################################################################################
-include("${CMAKE_SOURCE_DIR}/cmake/include/git_submodule.cmake")
-include(CMakePackageConfigHelpers)
-
-################################################################################
 # Constants
 ################################################################################
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -41,14 +35,30 @@ project(
 )
 
 ################################################################################
+# Includes
+################################################################################
+include("${CMAKE_SOURCE_DIR}/cmake/include/git_submodule.cmake")
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
+################################################################################
 # Options
 ################################################################################
-option(QTK_DEBUG "Enable debugger" ON)
-option(QTK_BUILD_GUI "Build the Qtk desktop application" ON)
-option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" ON)
+option(QTK_DEBUG "Enable debugger" OFF)
 option(QTK_UPDATE_SUBMODULES "Update external project (assimp) submodule" OFF)
+option(QTK_INSTALL_GUI "Build the Qtk desktop application" ON)
+option(QTK_INSTALL_LIB "Install libqtk to CMAKE_INSTALL_PREFIX path." ON)
+option(QTK_INSTALL_PLUGINS "Install Qtk plugin collection to Qt Creator." OFF)
+option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" ON)
+option(QTK_ENABLE_CCACHE "Enable ccache" ON)
+
+if (QTK_ENABLE_CCACHE)
+  set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+endif()
+
 # Install Qtk for use within Qt Creator projects only, instead of system-wide.
-option(QTK_PREFIX_QTCREATOR "Install Qtk to Qt Creator." OFF)
+option(QTK_PREFIX_QTCREATOR "Install Qtk to Qt Creator. Untested." OFF)
+
 # Option for bringing your own assimp installation; Otherwise not needed
 # + If assimp is available system-wide we can just set QTK_UPDATE_SUBMODULES OFF
 option(
@@ -63,40 +73,44 @@ else()
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-set(QT_DIR "$ENV{HOME}/Qt/" CACHE PATH "Path to Qt6")
+# This should be set to your Qt6 installation directory.
+set(QT_INSTALL_DIR "$ENV{HOME}/Qt/6.5.0/gcc_64" CACHE PATH "Path to Qt6 install.")
+# Point CMAKE_PREFIX_PATH to Qt6 install directory
+# If Qtk is built within Qt Creator this is not required.
+list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
+# TODO: Remove if not using sdlibdeps.
+#set(CMAKE_INSTALL_RPATH "${QT_INSTALL_DIR}/lib")
+if (QTK_PREFIX_QTCREATOR)
+  # TODO: This might be a bit strange and needs more testing.
+  set(CMAKE_INSTALL_PREFIX  "${QT_INSTALL_DIR}")
+endif()
 
+set(
+    QT_CREATOR_DIR
+    "${QT_INSTALL_DIR}/../../Tools/QtCreator"
+    CACHE PATH "Qt Creator path used to install Qtk plugins for Qt Designer."
+)
 # Qt Designer will look in different locations if WIN / Unix.
 # These paths are for using Qt Designer integrated within Qt Creator.
 # Standalone Qt Designer may use different paths.
 if (WIN32)
   # These paths may be different on windows. I have not tested this.
-  set(QT_PLUGIN_INSTALL_DIR "${QT_DIR}/Tools/QtCreator/bin/plugins/designer")
-  set(QT_PLUGIN_LIBRARY_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/lib")
+  set(QT_PLUGIN_INSTALL_DIR "${QT_CREATOR_DIR}/bin/plugins/designer")
+  set(QT_PLUGIN_LIBRARY_DIR "${QT_CREATOR_DIR}/lib/Qt/lib")
 else()
-  set(QT_PLUGIN_INSTALL_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/plugins/designer")
-  set(QT_PLUGIN_LIBRARY_DIR "${QT_DIR}/Tools/QtCreator/lib/Qt/lib")
+  set(QT_PLUGIN_INSTALL_DIR "${QT_CREATOR_DIR}/lib/Qt/plugins/designer")
+  set(QT_PLUGIN_LIBRARY_DIR "${QT_CREATOR_DIR}/lib/Qt/lib")
 endif()
-
-# This should be set to your Qt6 installation directory.
-set(QT_INSTALL_DIR "${QT_DIR}/6.5.0/gcc_64" CACHE PATH "Path to Qt6 install")
-# Point CMAKE_PREFIX_PATH to Qt6 install directory
-# If Qtk is built within Qt Creator this is not required.
-list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
-
 set(QTK_PLUGIN_LIBRARY_DIR "${QT_PLUGIN_LIBRARY_DIR}")
 set(QTK_PLUGIN_INSTALL_DIR "${QT_PLUGIN_INSTALL_DIR}")
-set(CMAKE_INSTALL_PREFIX  "${CMAKE_SOURCE_DIR}/install")
-if (QTK_PREFIX_QTCREATOR)
-  # TODO: This might be a bit strange and needs more testing.
-  set(CMAKE_INSTALL_PREFIX  "${QT_INSTALL_DIR}")
-endif()
+
 message(STATUS "[Qtk] CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
 set(QTK_RESOURCES "${CMAKE_SOURCE_DIR}/resources")
 set(QTK_OSX_ICONS ${CMAKE_SOURCE_DIR}/resources/icons/osx/kilroy.icns)
 
 # Print all QTK options and their values.
 get_cmake_property(VAR_NAMES VARIABLES)
-list(FILTER VAR_NAMES INCLUDE REGEX "^QTK_.*$")
+list(FILTER VAR_NAMES INCLUDE REGEX "^Q[tT][kK]_.*$")
 list(SORT VAR_NAMES)
 foreach(VAR_NAME ${VAR_NAMES})
   message(STATUS "[Qtk] ${VAR_NAME}=${${VAR_NAME}}")
@@ -120,15 +134,26 @@ if(NOT Qt6_FOUND)
   )
 endif()
 
-# Find Assimp
-set(ASSIMP_BUILD_TESTS OFF CACHE STRING "Do not build assimp tests." FORCE)
-set(ASSIMP_INSTALL ON CACHE STRING "Use assimp as a submodule." FORCE)
-set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE STRING "No warnings as errors." FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE STRING "Build static assimp libs" FORCE)
+# Find Assimp.
 if(QTK_UPDATE_SUBMODULES)
+  # Required to statically link.
+  add_compile_options(-fPIC)
+  set(BUILD_SHARED_LIBS OFF CACHE STRING "Build static assimp libs" FORCE)
+  set(ASSIMP_BUILD_ZLIB ON CACHE STRING "Build Zlib with assimp." FORCE)
+  set(
+      ASSIMP_INSTALL
+      OFF CACHE STRING "Disable to use assimp as a submodule."
+      FORCE
+  )
+  set(ASSIMP_NO_EXPORT ON CACHE STRING "Disable to export assimp." FORCE)
+  set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE STRING "No warnings as errors." FORCE)
+  set(ASSIMP_BUILD_TESTS OFF CACHE STRING "Do not build assimp tests." FORCE)
   message(STATUS "[Qtk] Updating submodules...")
   submodule_update("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
-  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/")
+  add_subdirectory(
+      "${CMAKE_CURRENT_SOURCE_DIR}/extern/assimp/assimp/"
+      EXCLUDE_FROM_ALL
+  )
 else()
   find_package(assimp REQUIRED)
 endif()
