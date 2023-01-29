@@ -33,6 +33,7 @@ target_link_libraries(qtk_plugin_library PUBLIC Qt6::UiPlugin qtk_library)
 
 install(
     TARGETS qtk_plugin_library
+    COMPONENT qtk_collection
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     RUNTIME DESTINATION bin
@@ -61,6 +62,7 @@ target_link_libraries(qtk_collection PUBLIC qtk_plugin_library)
 
 install(
     TARGETS qtk_collection
+    COMPONENT qtk_collection
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
     RUNTIME DESTINATION bin
@@ -110,6 +112,7 @@ set_target_properties(
 
 install(
     TARGETS qtk_main
+    COMPONENT qtk
     BUNDLE DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib/static
@@ -121,7 +124,7 @@ qt_generate_deploy_app_script(
     FILENAME_VARIABLE QTK_DEPLOY_SCRIPT
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
-install(SCRIPT ${QTK_DEPLOY_SCRIPT})
+install(SCRIPT ${QTK_DEPLOY_SCRIPT} COMPONENT qtk)
 
 if(WIN32)
   if(MSVC AND TARGET Qt6::qmake)

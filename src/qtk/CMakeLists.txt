@@ -83,6 +83,7 @@ install(
     TARGETS qtk_library
     # Associate qtk_library target with qtk-export
     EXPORT qtk_export
+    COMPONENT libqtk
     FILE_SET HEADERS DESTINATION include
     INCLUDES DESTINATION include
     LIBRARY DESTINATION lib

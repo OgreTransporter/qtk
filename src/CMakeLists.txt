@@ -26,12 +26,14 @@ install(
     FILES
       "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
       "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    COMPONENT libqtk
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
 install(
     EXPORT qtk_export
       FILE ${PROJECT_NAME}Targets.cmake
       NAMESPACE ${PROJECT_NAME}::
+    COMPONENT libqtk
     DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
@@ -47,7 +49,7 @@ set(CPACK_PACKAGE_CONTACT "shaunreed.com")
 #set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
 set(CPACK_THREADS 0)
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Qtk")
-set(CPACK_COMPONENTS_ALL Unspecified)
+
 # Debian
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${CPACK_PACKAGE_HOMEPAGE_URL})
 set(CPACK_INSTALL_SCRIPTS ${QTK_DEPLOY_SCRIPT})
