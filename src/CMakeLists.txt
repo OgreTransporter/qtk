@@ -34,7 +34,7 @@ if (QTK_INSTALL_GUI OR QTK_INSTALL_PLUGINS)
     install(
         TARGETS qtk_main qtk_library
         COMPONENT qtk
-        BUNDLE DESTINATION bin
+        BUNDLE DESTINATION .
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib/static
         RUNTIME DESTINATION bin
@@ -134,13 +134,14 @@ endif()
 # Windows
 set(CPACK_NSIS_MODIFY_PATH ON)
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+# https://nsis.sourceforge.io/Reference/CreateShortCut
 set(
     CPACK_NSIS_CREATE_ICONS_EXTRA
-    "CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Qtk.lnk' '$INSTDIR\\\\qtk_main.exe'"
+    "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\Qtk.lnk' '$INSTDIR\\bin\\qtk_main.exe'"
 )
 set(
     CPACK_NSIS_DELETE_ICONS_EXTRA
-    "Delete '$SMPROGRAMS\\\\$START_MENU\\\\Qtk.lnk'"
+    "Delete '$SMPROGRAMS\\$START_MENU\\Qtk.lnk'"
 )
 # TODO: Icons for NSIS installer.
 #set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
