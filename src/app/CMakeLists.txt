@@ -15,6 +15,7 @@ set(
     debugconsole.cpp debugconsole.ui
     toolbox.cpp toolbox.ui
     treeview.cpp treeview.ui
+    qtkmainwindow.cpp qtkmainwindow.h qtkmainwindow.ui
 )
 set(
     QTK_PLUGIN_LIBRARY_HEADERS
@@ -50,7 +51,6 @@ target_link_libraries(qtk_collection PUBLIC qtk_plugin_library)
 set(
     QTK_APP_SOURCES
     examplescene.cpp examplescene.h
-    qtkmainwindow.cpp qtkmainwindow.h qtkmainwindow.ui
     main.cpp
 )
 
