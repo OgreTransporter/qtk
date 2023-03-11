@@ -227,7 +227,7 @@ jobs:
       - name: Build Qtk Plugins (Windows)
         if: matrix.os == 'windows-latest'
         shell: bash
-        run: cmake --build build/ --config Release
+        run: cmake --build build/ --config Release --target qtk_collection
 
       # OSX / Linux
 
