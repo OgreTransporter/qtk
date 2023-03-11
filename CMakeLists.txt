@@ -23,6 +23,7 @@ if(WIN32)
   set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
   add_compile_options(/wd4131 /wd4127)
 endif()
+add_compile_options(-fPIC)
 
 ################################################################################
 # Project
@@ -46,8 +47,8 @@ include(GNUInstallDirs)
 ################################################################################
 option(QTK_DEBUG "Enable debugger" OFF)
 option(QTK_UPDATE_SUBMODULES "Update external project (assimp) submodule" OFF)
-option(QTK_INSTALL_GUI "Build the Qtk desktop application" ON)
-option(QTK_INSTALL_LIB "Install libqtk to CMAKE_INSTALL_PREFIX path." ON)
+option(QTK_BUILD_GUI "Build the Qtk desktop application" ON)
+option(QTK_INSTALL_LIBRARY "Install libqtk to CMAKE_INSTALL_PREFIX path." ON)
 option(QTK_INSTALL_PLUGINS "Install Qtk plugin collection to Qt Creator." OFF)
 option(QTK_BUILD_EXAMPLE "Build the Qtk example desktop application" ON)
 option(QTK_ENABLE_CCACHE "Enable ccache" ON)

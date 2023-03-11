@@ -92,7 +92,7 @@ using libqtk.
 Below is an example of installing on a system path.
 
 ```bash
-cmake -S qtk/ -B qtk/build/ -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_PLUGINS=OFF -DQTK_DEBUG=OFF
+cmake -S qtk/ -B qtk/build/ -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_BUILD_GUI=OFF -DQTK_INSTALL_PLUGINS=OFF -DQTK_DEBUG=OFF
 cmake --build qtk/build/ -j $(nproc --ignore=2)
 sudo cmake --install . --prefix=/usr/local
 -- Install configuration: "Release"
@@ -133,7 +133,7 @@ interfaces.
 To build and install the Qtk plugin collection -
 
 ```bash
-cmake -S /path/to/qtk -B /path/to/qtk/build -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_INSTALL_PLUGINS=ON -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_LIB=OFF
+cmake -S /path/to/qtk -B /path/to/qtk/build -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_INSTALL_PLUGINS=ON -DQTK_BUILD_GUI=OFF -DQTK_INSTALL_LIBRARY=OFF
 cmake --build /path/to/qtk/build
 cmake --install /path/to/qtk/build
 ```
@@ -278,10 +278,11 @@ Any of the above options can be appended with `--trace-expand` to debug package
 generation issues.
 The contents of all packages will depend on how the build was configured.
 
-If we are generating packages for *only* libqtk, we set `-DQTK_INSTALL_LIB=ON`
+If we are generating packages for *only* libqtk, we
+set `-DQTK_INSTALL_LIBRARY=ON`
 during the cmake configuration step.
 To generate packages for Qtk desktop application, we should
-set `-DQTK_INSTALL_GUI=ON`, and optionally `-DQTK_INSTALL_LIB=ON` if we would
+set `-DQTK_BUILD_GUI=ON`, and optionally `-DQTK_INSTALL_LIBRARY=ON` if we would
 like to bundle libqtk with the desktop application.
 
 The NSIS installer will allow component-specific path modification for all of
@@ -294,6 +295,8 @@ Some useful links and resources that I have found while working on this project.
 [Qt Designer UI file format](https://doc.qt.io/qt-6/designer-ui-file-format.html)
 
 [QtPlugin Import / Export plugins](https://doc.qt.io/qt-6/qtplugin.html)
+
+[KDAB](https://www.kdab.com/)
 
 ## Model Artists
 

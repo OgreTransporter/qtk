@@ -8,7 +8,7 @@ on:
 jobs:
   Build-Qtk:
     env:
-      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_INSTALL_GUI=ON -DQTK_INSTALL_LIB=ON -DQTK_INSTALL_PLUGINS=OFF
+      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_BUILD_GUI=ON -DQTK_INSTALL_LIBRARY=ON -DQTK_INSTALL_PLUGINS=OFF
     strategy:
       fail-fast: false
       matrix:
@@ -70,11 +70,11 @@ jobs:
         shell: bash
         run: cmake --build build/ --target package --config Release
 
-#      - uses: actions/upload-artifact@v3
-#        if: always()
-#        with:
-#          name: qtk-${{ matrix.os }}-install
-#          path: install/*
+      - name: Upload Qtk install directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: qtk-${{ matrix.os }}-install
+          path: install/*
 
 # TODO: Enable after trimming resources.
 #      - name: Package Qtk Application Sources
@@ -82,27 +82,18 @@ jobs:
 #        shell: bash
 #        run: |
 #          cmake --build build/ --target package_source
-
+#
 #      - name: Upload package artifacts
 #        uses: actions/upload-artifact@v3
-#        if: always()
 #        with:
-#          name: qtk-packages-${{ matrix.os }}
+#          name: qtk-${{ matrix.os }}-packages
 #          path: |
-#            build/packages/
+#            build/packages/*
 #            !build/packages/_CPack_Packages/*
-
-      - name: Upload logs on failure
-        uses: actions/upload-artifact@v3
-        if: ${{ failure() && matrix.os == 'windows-latest' }}
-        with:
-          name: qtk-failed-packages-${{ matrix.os }}
-          path: |
-            build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
   Build-Qtk-Library:
     env:
-      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_LIB=ON -DQTK_INSTALL_PLUGINS=OFF
+      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_BUILD_GUI=OFF -DQTK_INSTALL_LIBRARY=ON -DQTK_INSTALL_PLUGINS=OFF
     strategy:
       fail-fast: false
       matrix:
@@ -164,32 +155,25 @@ jobs:
         shell: bash
         run: cmake --build build/ --target package --config Release
 
-#      - uses: actions/upload-artifact@v3
-#        if: always()
-#        with:
-#          name: libqtk-${{ matrix.os }}-install
-#          path: install/*
-
-#      - name: Upload package artifacts
-#        uses: actions/upload-artifact@v3
-#        if: always()
-#        with:
-#          name: libqtk-packages-${{ matrix.os }}
-#          path: |
-#            build/packages/
-#            !build/packages/_CPack_Packages/*
-
-      - name: Upload logs on failure
+      - name: Upload libqtk install
         uses: actions/upload-artifact@v3
-        if: ${{ failure() && matrix.os == 'windows-latest' }}
+        if: always()
         with:
-          name: libqtk-failed-packages-${{ matrix.os }}
+          name: libqtk-${{ matrix.os }}-install
+          path: install/*
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: libqtk-packages-${{ matrix.os }}
           path: |
-            build/_CPack_Packages/win64/NSIS/NSISOutput.log
+            build/packages/
+            !build/packages/_CPack_Packages/*
 
   Build-Qtk-Plugins:
     env:
-      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_LIB=OFF -DQTK_INSTALL_PLUGINS=ON
+      CONFIG: -DQTK_UPDATE_SUBMODULES=ON -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF -DQTK_BUILD_GUI=OFF -DQTK_INSTALL_LIBRARY=OFF -DQTK_INSTALL_PLUGINS=ON
     strategy:
       fail-fast: false
       matrix:
@@ -278,25 +262,3 @@ jobs:
         shell: bash
         run: |
           sudo apt install libassimp-dev
-
-      - name: Build Qtk
-        if: matrix.os == 'windows-latest'
-        shell: bash
-        run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
-          cmake --build build/ --config Release
-
-      - name: Build Qtk
-        if: matrix.os != 'windows-latest'
-        shell: bash
-        run: |
-          cmake -B build/ ${{ matrix.cmake }} -DQTK_DEBUG=OFF -DQTK_ENABLE_CCACHE=OFF
-          cmake --build build/ --config Release -- -j $(nproc)
-
-  # TODO: Enable with tag only when done testing
-#  Release-Qtk:
-#    needs: Build-Qtk
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [ubuntu-latest, windows-latest, macos-latest]

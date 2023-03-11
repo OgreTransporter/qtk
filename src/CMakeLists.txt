@@ -6,68 +6,96 @@
 ################################################################################
 
 # Qtk Library
+
+# We always build libqtk since the plugins and GUI both depend on it.
 add_subdirectory(qtk)
+install(
+    FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    COMPONENT libqtk
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)
+install(
+    EXPORT qtk_export
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    COMPONENT libqtk
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)
+# System install for qtk_library
+install(
+    TARGETS qtk_library
+    # Associate qtk_library target with qtk-export
+    EXPORT qtk_export
+    COMPONENT libqtk
+    FILE_SET HEADERS DESTINATION include
+    INCLUDES DESTINATION include
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib/static
+    RUNTIME DESTINATION bin
+)
 
 # Qtk Application
-if (QTK_INSTALL_GUI OR QTK_INSTALL_PLUGINS)
+if(QTK_BUILD_GUI OR QTK_INSTALL_PLUGINS)
   add_subdirectory(app)
+endif()
 
-  # Install custom Qtk plugins for Qt Designer.
-  if(QTK_INSTALL_PLUGINS)
-    install(
-        TARGETS qtk_library qtk_plugin_library
-        COMPONENT qtk_collection
-        LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-        ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-        RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
-    )
-    install(
-        TARGETS qtk_collection
-        COMPONENT qtk_collection
-        LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-        ARCHIVE DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-        RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
-    )
-  endif()
+if(QTK_INSTALL_PLUGINS)
+  # Optionally install custom Qtk plugins for Qt Designer.
+  install(
+      TARGETS qtk_library qtk_plugin_library
+      COMPONENT qtk_collection
+      LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+      ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+      RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
+  )
+  install(
+      TARGETS qtk_collection
+      COMPONENT qtk_collection
+      LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+      ARCHIVE DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+      RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
+  )
+endif()
 
-  if(QTK_INSTALL_GUI)
-    install(
-        TARGETS qtk_app qtk_library
-        COMPONENT qtk
-        BUNDLE DESTINATION .
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static
-        RUNTIME DESTINATION bin
-    )
+if(QTK_BUILD_GUI)
+  install(
+      TARGETS qtk_app
+      COMPONENT qtk
+      BUNDLE DESTINATION .
+      LIBRARY DESTINATION lib
+      ARCHIVE DESTINATION lib/static
+      RUNTIME DESTINATION bin
+  )
 
-    qt_generate_deploy_app_script(
-        TARGET qtk_app
-        OUTPUT_SCRIPT QTK_DEPLOY_SCRIPT
-        NO_UNSUPPORTED_PLATFORM_ERROR
-    )
-    install(SCRIPT ${QTK_DEPLOY_SCRIPT} COMPONENT qtk)
+  qt_generate_deploy_app_script(
+      TARGET qtk_app
+      OUTPUT_SCRIPT QTK_DEPLOY_SCRIPT
+      NO_UNSUPPORTED_PLATFORM_ERROR
+  )
+  install(SCRIPT ${QTK_DEPLOY_SCRIPT} COMPONENT qtk)
 
-    if(WIN32)
-      if(MSVC AND TARGET Qt6::qmake)
-        get_target_property(QT6_QMAKE_LOCATION Qt6::qmake IMPORTED_LOCATION)
-        execute_process(
-            COMMAND "${QT6_QMAKE_LOCATION}" -query QT_INSTALL_PREFIX
-            RESULT_VARIABLE return_code
-            OUTPUT_VARIABLE QT6_INSTALL_PREFIX
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        file(TO_NATIVE_PATH "${QT6_INSTALL_PREFIX}/bin" QT6_INSTALL_PREFIX)
+  if(WIN32)
+    if(MSVC AND TARGET Qt6::qmake)
+      get_target_property(QT6_QMAKE_LOCATION Qt6::qmake IMPORTED_LOCATION)
+      execute_process(
+          COMMAND "${QT6_QMAKE_LOCATION}" -query QT_INSTALL_PREFIX
+          RESULT_VARIABLE return_code
+          OUTPUT_VARIABLE QT6_INSTALL_PREFIX
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+      file(TO_NATIVE_PATH "${QT6_INSTALL_PREFIX}/bin" QT6_INSTALL_PREFIX)
 
-        set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_app.vcxproj.user")
-        file(WRITE ${VSUSER_FILE} "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
-        file(APPEND ${VSUSER_FILE} "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
-        file(APPEND ${VSUSER_FILE} "  <PropertyGroup>\n")
-        file(APPEND ${VSUSER_FILE} "    <LocalDebuggerEnvironment>Path=$(SolutionDir)\\lib\\$(Configuration);${QT6_INSTALL_PREFIX};$(Path)\n")
-        file(APPEND ${VSUSER_FILE} "$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>\n")
-        file(APPEND ${VSUSER_FILE} "    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
-        file(APPEND ${VSUSER_FILE} "  </PropertyGroup>\n")
-        file(APPEND ${VSUSER_FILE} "</Project>\n")
-      endif()
+      set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_app.vcxproj.user")
+      file(WRITE ${VSUSER_FILE} "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
+      file(APPEND ${VSUSER_FILE} "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
+      file(APPEND ${VSUSER_FILE} "  <PropertyGroup>\n")
+      file(APPEND ${VSUSER_FILE} "    <LocalDebuggerEnvironment>Path=$(SolutionDir)\\lib\\$(Configuration);${QT6_INSTALL_PREFIX};$(Path)\n")
+      file(APPEND ${VSUSER_FILE} "$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>\n")
+      file(APPEND ${VSUSER_FILE} "    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n")
+      file(APPEND ${VSUSER_FILE} "  </PropertyGroup>\n")
+      file(APPEND ${VSUSER_FILE} "</Project>\n")
     endif()
   endif()
 endif()
@@ -81,35 +109,6 @@ configure_package_config_file(
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
     INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
-
-if (QTK_INSTALL_LIB)
-  install(
-      FILES
-      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-      COMPONENT libqtk
-      DESTINATION lib/cmake/${PROJECT_NAME}
-  )
-  install(
-      EXPORT qtk_export
-      FILE ${PROJECT_NAME}Targets.cmake
-      NAMESPACE ${PROJECT_NAME}::
-      COMPONENT libqtk
-      DESTINATION lib/cmake/${PROJECT_NAME}
-  )
-  # System install for qtk_library
-  install(
-      TARGETS qtk_library
-      # Associate qtk_library target with qtk-export
-      EXPORT qtk_export
-      COMPONENT libqtk
-      FILE_SET HEADERS DESTINATION include
-      INCLUDES DESTINATION include
-      LIBRARY DESTINATION lib
-      ARCHIVE DESTINATION lib/static
-      RUNTIME DESTINATION bin
-  )
-endif()
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")

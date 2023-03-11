@@ -36,7 +36,7 @@ target_link_libraries(qtk_plugin_library PUBLIC Qt6::UiPlugin qtk_library)
 # Qtk Widget Collection Plugin
 ################################################################################
 # Create a Qt Designer plugin for a collection of widgets from our library.
-qt_add_plugin(qtk_collection SHARED EXCLUDE_FROM_ALL)
+qt_add_plugin(qtk_collection SHARED)
 target_sources(
     qtk_collection PRIVATE
     widgetplugincollection.cpp widgetplugincollection.h
@@ -52,13 +52,6 @@ set(
     QTK_APP_SOURCES
     qtkscene.cpp qtkscene.h
     main.cpp
-)
-
-qt6_add_big_resources(QTK_APP_SOURCES "${QTK_RESOURCES}/resources.qrc")
-configure_file(
-    resources.h.in
-    "${CMAKE_CURRENT_BINARY_DIR}/resources.h"
-    @ONLY
 )
 
 qt_add_executable(qtk_app ${QTK_APP_SOURCES})

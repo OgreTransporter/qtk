@@ -7,7 +7,6 @@
 ##############################################################################*/
 
 #include "qtkscene.h"
-#include "resources.h"
 
 using namespace Qtk;
 
