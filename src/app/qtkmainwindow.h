@@ -53,6 +53,8 @@ class MainWindow : public QMainWindow {
      */
     static MainWindow * getMainWindow();
 
+    Qtk::QtkWidget * getQtkWidget(int64_t index = 0);
+
     /**
      * Accessor for retrieving a QtkWidget by it's objectName.
      * This function will not construct a new QtkWidget if none is found.

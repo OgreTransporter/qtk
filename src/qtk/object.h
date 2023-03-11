@@ -92,7 +92,7 @@ namespace Qtk {
         return mShape.mVertices;
       }
 
-      [[nodiscard]] inline const char * getName() const { return mName; }
+      [[nodiscard]] inline std::string getName() const { return mName; }
 
       [[nodiscard]] inline const Type & getType() const { return mType; }
 
@@ -160,7 +160,7 @@ namespace Qtk {
       Transform3D mTransform;
       Shape mShape;
       Texture mTexture;
-      const char * mName;
+      std::string mName;
       bool mBound;
       Type mType = QTK_OBJECT;
   };

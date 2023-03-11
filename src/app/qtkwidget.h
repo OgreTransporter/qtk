@@ -100,6 +100,13 @@ namespace Qtk {
        */
       inline Qtk::Scene * getScene() { return mScene; }
 
+      /**
+       * @return Pointer to the QOpenGLDebugLogger attached to this widget.
+       */
+      inline QOpenGLDebugLogger * getOpenGLDebugLogger() {
+        return mDebugLogger;
+      }
+
       /*************************************************************************
        * Setters
        ************************************************************************/

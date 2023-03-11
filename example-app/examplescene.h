@@ -11,9 +11,9 @@
 
 #include <qtk/scene.h>
 
-class ExampleScene : public Qtk::Scene {
+class ExampleScene : public Qtk::SceneInterface {
   public:
-    ExampleScene();
+    ExampleScene(Qtk::Scene * scene);
 
     ~ExampleScene();
 

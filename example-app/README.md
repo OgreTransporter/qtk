@@ -1,7 +1,10 @@
 
 This is an example application that is using the Qtk API to create custom Qt 
 OpenGL widgets. This is very similar to `QtkWidget` in the Qtk desktop 
-application, but could be modified for different uses if needed.
+application source code, but could be modified for different uses if needed.
+
+There are no camera controls supported in this example. The camera is fixed.
+If these controls are desired, they can be implemented by the client.
 
 You can import your own models within `examplescene.cpp`, inside the
 `ExampleScene::init()` function. Rotations and translations

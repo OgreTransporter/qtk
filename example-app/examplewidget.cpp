@@ -11,7 +11,12 @@
 #include "examplewidget.h"
 
 ExampleWidget::ExampleWidget(QWidget * parent) :
-    QOpenGLWidget(parent), mScene(new ExampleScene) {
+    QOpenGLWidget(parent), mScene(new ExampleScene(new Qtk::SceneEmpty)) {
+  // NOTE: The decorator pattern is used to save / load scenes in Qtk currently.
+  // The initializer above sets mScene to the concrete decorator ExampleScene.
+  // Qtk::SceneEmpty provides an empty scene as the concrete component.
+  // ExampleScene is defined in client source, deriving Qtk::SceneInterface.
+
   QSurfaceFormat format;
   format.setRenderableType(QSurfaceFormat::OpenGL);
   format.setProfile(QSurfaceFormat::CoreProfile);

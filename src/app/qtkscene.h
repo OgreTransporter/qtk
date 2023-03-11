@@ -29,15 +29,15 @@
  *
  * To create your own Scene from scratch see Qtk::Scene.
  */
-class ExampleScene : public Qtk::Scene {
+class QtkScene : public Qtk::SceneInterface {
   public:
     /***************************************************************************
      * Contructors / Destructors
      **************************************************************************/
 
-    ExampleScene();
+    QtkScene(Qtk::Scene * scene);
 
-    ~ExampleScene();
+    ~QtkScene();
 
     /***************************************************************************
      * Inherited Public Overrides

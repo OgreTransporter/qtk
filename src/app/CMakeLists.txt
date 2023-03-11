@@ -50,7 +50,7 @@ target_link_libraries(qtk_collection PUBLIC qtk_plugin_library)
 
 set(
     QTK_APP_SOURCES
-    examplescene.cpp examplescene.h
+    qtkscene.cpp qtkscene.h
     main.cpp
 )
 
@@ -61,11 +61,11 @@ configure_file(
     @ONLY
 )
 
-qt_add_executable(qtk_main ${QTK_APP_SOURCES})
-target_link_libraries(qtk_main PRIVATE qtk_plugin_library)
+qt_add_executable(qtk_app ${QTK_APP_SOURCES})
+target_link_libraries(qtk_app PRIVATE qtk_plugin_library)
 
 set_target_properties(
-    qtk_main PROPERTIES
+    qtk_app PROPERTIES
       WIN32_EXECUTABLE TRUE
       MACOSX_BUNDLE TRUE
       MACOSX_BUNDLE_BUNDLE_NAME Qtk

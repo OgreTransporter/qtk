@@ -96,7 +96,7 @@ void Model::loadModel(const std::string & path) {
   sortModelMeshes();
 
   // Object finished loading, insert it into ModelManager
-  mManager.insert(getName(), this);
+  mManager.insert(getName().c_str(), this);
 }
 
 void Model::processNode(aiNode * node, const aiScene * scene) {
@@ -200,7 +200,7 @@ ModelMesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
   }
 
-  return {vertices, indices, textures, mVertexShader, mFragmentShader};
+  return {vertices, indices, textures, mVertexShader.c_str(), mFragmentShader.c_str()};
 }
 
 ModelMesh::Textures Model::loadMaterialTextures(

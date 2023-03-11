@@ -6,7 +6,7 @@
 ## Contact: shaunrd0@gmail.com  | URL: www.shaunreed.com | GitHub: shaunrd0   ##
 ##############################################################################*/
 
-#include "examplescene.h"
+#include "qtkscene.h"
 #include "resources.h"
 
 using namespace Qtk;
@@ -15,13 +15,14 @@ using namespace Qtk;
  * Constructors, Destructors
  ******************************************************************************/
 
-ExampleScene::ExampleScene() {
-  setSceneName("Example Scene");
+QtkScene::QtkScene(Qtk::Scene * scene) :
+    Qtk::SceneInterface(scene) {
+  setSceneName("Qtk Scene");
   getCamera().getTransform().setTranslation(0.0f, 0.0f, 20.0f);
   getCamera().getTransform().setRotation(-5.0f, 0.0f, 1.0f, 0.0f);
 }
 
-ExampleScene::~ExampleScene() {
+QtkScene::~QtkScene() {
   delete mTestPhong;
   delete mTestSpecular;
   delete mTestDiffuse;
@@ -32,7 +33,7 @@ ExampleScene::~ExampleScene() {
  * Public Member Functions
  ******************************************************************************/
 
-void ExampleScene::init() {
+void QtkScene::init() {
   // Add a skybox to the scene using default cube map images and settings.
   setSkybox(new Qtk::Skybox("Skybox"));
 
@@ -97,7 +98,7 @@ void ExampleScene::init() {
   model->getTransform().scale(0.15f);
 
   model =
-      addObject(new Qtk::Model("scythe", ":/models/models/scythe/scythe.obj"));
+      addObject(new Qtk::Model("My scythe", ":/models/models/scythe/scythe.obj"));
   model->getTransform().setTranslation(-6.0f, 0.0f, -10.0f);
   model->getTransform().rotate(-90.0f, 1.0f, 0.0f, 0.0f);
   model->getTransform().rotate(90.0f, 0.0f, 1.0f, 0.0f);
@@ -387,18 +388,10 @@ void ExampleScene::init() {
   mesh->reallocateTexCoords(mesh->getTexCoords());
 }
 
-void ExampleScene::draw() {
+void QtkScene::draw() {
   // WARNING: We must call the base class draw() function first.
   // + This will handle rendering core scene components like the Skybox.
   Scene::draw();
-
-  for(const auto & model : getModels()) {
-    model->draw();
-  }
-
-  for(const auto & mesh : getMeshes()) {
-    mesh->draw();
-  }
 
   mTestPhong->bindShaders();
   mTestPhong->setUniform(
@@ -409,14 +402,14 @@ void ExampleScene::draw() {
       MeshRenderer::getInstance("phongLight")->getTransform().getTranslation());
   mTestPhong->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   mTestPhong->releaseShaders();
   mTestPhong->draw();
 
   mTestAmbient->bindShaders();
   mTestAmbient->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   mTestAmbient->releaseShaders();
   mTestAmbient->draw();
 
@@ -430,7 +423,7 @@ void ExampleScene::draw() {
                             .getTranslation());
   mTestDiffuse->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   mTestDiffuse->releaseShaders();
   mTestDiffuse->draw();
 
@@ -444,12 +437,12 @@ void ExampleScene::draw() {
                             .getTranslation());
   mTestSpecular->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   mTestSpecular->releaseShaders();
   mTestSpecular->draw();
 }
 
-void ExampleScene::update() {
+void QtkScene::update() {
   auto mySpartan = Model::getInstance("My spartan");
   mySpartan->getTransform().rotate(0.75f, 0.0f, 1.0f, 0.0f);
 
@@ -463,12 +456,12 @@ void ExampleScene::update() {
   alien->setUniform("uLight.position", position);
   alien->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   auto posMatrix = alien->getTransform().toMatrix();
   alien->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   alien->setUniform("uMVP.model", posMatrix);
-  alien->setUniform("uMVP.view", ExampleScene::getCamera().toMatrix());
-  alien->setUniform("uMVP.projection", ExampleScene::getProjectionMatrix());
+  alien->setUniform("uMVP.view", QtkScene::getCamera().toMatrix());
+  alien->setUniform("uMVP.projection", QtkScene::getProjectionMatrix());
   alien->getTransform().rotate(0.75f, 0.0f, 1.0f, 0.0f);
 
   position = MeshRenderer::getInstance("spartanTestLight")
@@ -478,12 +471,12 @@ void ExampleScene::update() {
   spartan->setUniform("uLight.position", position);
   spartan->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   posMatrix = spartan->getTransform().toMatrix();
   spartan->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   spartan->setUniform("uMVP.model", posMatrix);
-  spartan->setUniform("uMVP.view", ExampleScene::getCamera().toMatrix());
-  spartan->setUniform("uMVP.projection", ExampleScene::getProjectionMatrix());
+  spartan->setUniform("uMVP.view", QtkScene::getCamera().toMatrix());
+  spartan->setUniform("uMVP.projection", QtkScene::getProjectionMatrix());
   spartan->getTransform().rotate(0.75f, 0.0f, 1.0f, 0.0f);
 
   auto phong = MeshRenderer::getInstance("testPhong");
@@ -494,12 +487,12 @@ void ExampleScene::update() {
   phong->setUniform("uLight.position", position);
   phong->setUniform(
       "uCameraPosition",
-      ExampleScene::getCamera().getTransform().getTranslation());
+      QtkScene::getCamera().getTransform().getTranslation());
   posMatrix = phong->getTransform().toMatrix();
   phong->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   phong->setUniform("uMVP.model", posMatrix);
-  phong->setUniform("uMVP.view", ExampleScene::getCamera().toMatrix());
-  phong->setUniform("uMVP.projection", ExampleScene::getProjectionMatrix());
+  phong->setUniform("uMVP.view", QtkScene::getCamera().toMatrix());
+  phong->setUniform("uMVP.projection", QtkScene::getProjectionMatrix());
   phong->releaseShaders();
 
   // Rotate lighting example cubes

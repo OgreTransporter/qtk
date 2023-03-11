@@ -73,7 +73,7 @@ void ModelMesh::initMesh(const char * vert, const char * frag) {
   initializeOpenGLFunctions();
 
   // Create VAO, VBO, EBO
-  mVAO->create();
+  bool status = mVAO->create();
   mVBO->create();
   mEBO->create();
 

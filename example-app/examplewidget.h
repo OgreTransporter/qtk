@@ -32,7 +32,7 @@ class ExampleWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     void update();
 
   private:
-    ExampleScene * mScene;
+    Qtk::Scene * mScene;
 };
 
 #endif  // QTKCLIENT_EXAMPLEWIDGET_H

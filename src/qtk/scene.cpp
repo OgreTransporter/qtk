@@ -37,6 +37,23 @@ Scene::~Scene() {
  * Public Methods
  ******************************************************************************/
 
+void Scene::draw() {
+  if(!mInit) {
+    initializeOpenGLFunctions();
+    init();
+    mInit = true;
+  }
+  if(mSkybox != Q_NULLPTR) {
+    mSkybox->draw();
+  }
+  for(auto & model : mModels) {
+    model->draw();
+  }
+  for(const auto & mesh : mMeshes) {
+    mesh->draw();
+  }
+}
+
 std::vector<Object *> Scene::getObjects() const {
   // All scene objects must inherit from Qtk::Object.
   std::vector<Object *> objects(mMeshes.begin(), mMeshes.end());
@@ -51,7 +68,7 @@ std::vector<Object *> Scene::getObjects() const {
 
 Object * Scene::getObject(const QString & name) {
   for(auto object : getObjects()) {
-    if(object->getName() == name) {
+    if(object->getName() == name.toStdString()) {
       return object;
     }
   }
@@ -73,25 +90,4 @@ template <> Model * Scene::addObject(Model * object) {
   mModels.push_back(object);
   sceneUpdated(mSceneName);
   return object;
-}
-
-/*******************************************************************************
- * Private Methods
- ******************************************************************************/
-
-void Scene::privateDraw() {
-  if(!mInit) {
-    initializeOpenGLFunctions();
-    init();
-    mInit = true;
-  }
-  if(mSkybox != Q_NULLPTR) {
-    mSkybox->draw();
-  }
-  for(auto & model : mModels) {
-    model->draw();
-  }
-  for(const auto & mesh : mMeshes) {
-    mesh->draw();
-  }
 }

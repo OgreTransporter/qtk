@@ -74,7 +74,7 @@ We can install this library on a system path or a custom path and then set `CMAK
 Below is an example of installing on a system path.
 
 ```bash
-cmake -S qtk/ -B qtk/build/ -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_PLUGINS=OFF
+cmake -S qtk/ -B qtk/build/ -DCMAKE_PREFIX_PATH=$HOME/Qt/6.5.0/gcc_64 -DQTK_INSTALL_GUI=OFF -DQTK_INSTALL_PLUGINS=OFF -DQTK_DEBUG=OFF
 cmake --build qtk/build/ -j $(nproc --ignore=2)
 sudo cmake --install . --prefix=/usr/local
 -- Install configuration: "Release"

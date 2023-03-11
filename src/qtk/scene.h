@@ -10,6 +10,7 @@
 #define QTK_SCENE_H
 
 #include <QMatrix4x4>
+
 #include <utility>
 
 #include "camera3d.h"
@@ -65,7 +66,7 @@ namespace Qtk {
        *
        * This function is only called when the widget is redrawn.
        */
-      virtual void draw() { privateDraw(); };
+      virtual void draw();
 
       /**
        * Function called to update the QOpenGLWidget. Does not trigger a redraw.
@@ -165,6 +166,7 @@ namespace Qtk {
        */
       inline void setSceneName(QString name) { mSceneName = std::move(name); }
 
+      std::vector<Model *> mModels {};
     signals:
       /**
        * Signal thrown when the scene is modified by adding or removing objects.
@@ -175,16 +177,6 @@ namespace Qtk {
       void sceneUpdated(QString sceneName);
 
     private:
-      /*************************************************************************
-       * Private Methods
-       ************************************************************************/
-
-      /**
-       * Handles drawing members encapsulated by this base class.
-       * Child classes do not need to draw these objects manually.
-       */
-      void privateDraw();
-
       /*************************************************************************
        * Private Members
        ************************************************************************/
@@ -199,8 +191,33 @@ namespace Qtk {
       /* MeshRenderers used simple geometry. */
       std::vector<MeshRenderer *> mMeshes {};
       /* Models used for storing 3D models in the scene. */
-      std::vector<Model *> mModels {};
   };
+
+  class SceneEmpty : public Scene {
+    public:
+      void init() override {
+        setSceneName("Empty Scene");
+      }
+
+      void draw() override { Scene::draw(); }
+
+      void update() override { Scene::update(); }
+  };
+
+  class SceneInterface : public Scene {
+    public:
+      explicit SceneInterface(Scene * scene) : mScene(scene) {}
+
+      void init() override { mScene->init(); }
+
+      void draw() override { mScene->draw(); }
+
+      void update() override { mScene->update(); }
+
+    protected:
+      Scene * mScene;
+  };
+
 }  // namespace Qtk
 
 #endif  // QTK_SCENE_H

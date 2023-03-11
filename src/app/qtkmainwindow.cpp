@@ -7,7 +7,7 @@
 ##############################################################################*/
 
 #include "qtkmainwindow.h"
-#include "examplescene.h"
+#include "qtkscene.h"
 #include "ui_qtkmainwindow.h"
 
 MainWindow * MainWindow::mainWindow_ = Q_NULLPTR;
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent) {
   // Initialize static container for all active QtkWidgets
   auto qtkWidgets = findChildren<Qtk::QtkWidget *>();
   for(auto & qtkWidget : qtkWidgets) {
-    qtkWidget->setScene(new ExampleScene);
+    qtkWidget->setScene(new Qtk::SceneEmpty);
     views_.emplace(qtkWidget->getScene()->getSceneName(), qtkWidget);
     ui_->menuView->addAction(qtkWidget->getActionToggleConsole());
     connect(
@@ -58,6 +58,13 @@ MainWindow * MainWindow::getMainWindow() {
     mainWindow_ = new MainWindow;
   }
   return mainWindow_;
+}
+
+Qtk::QtkWidget * MainWindow::getQtkWidget(int64_t index) {
+  if(views_.size() <= index) {
+    return Q_NULLPTR;
+  }
+  return views_.begin(index)->second;
 }
 
 Qtk::QtkWidget * MainWindow::getQtkWidget(const QString & name) {

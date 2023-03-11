@@ -32,7 +32,7 @@ if (QTK_INSTALL_GUI OR QTK_INSTALL_PLUGINS)
 
   if(QTK_INSTALL_GUI)
     install(
-        TARGETS qtk_main qtk_library
+        TARGETS qtk_app qtk_library
         COMPONENT qtk
         BUNDLE DESTINATION .
         LIBRARY DESTINATION lib
@@ -41,7 +41,7 @@ if (QTK_INSTALL_GUI OR QTK_INSTALL_PLUGINS)
     )
 
     qt_generate_deploy_app_script(
-        TARGET qtk_main
+        TARGET qtk_app
         OUTPUT_SCRIPT QTK_DEPLOY_SCRIPT
         NO_UNSUPPORTED_PLATFORM_ERROR
     )
@@ -58,7 +58,7 @@ if (QTK_INSTALL_GUI OR QTK_INSTALL_PLUGINS)
         )
         file(TO_NATIVE_PATH "${QT6_INSTALL_PREFIX}/bin" QT6_INSTALL_PREFIX)
 
-        set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_main.vcxproj.user")
+        set(VSUSER_FILE "${CMAKE_CURRENT_BINARY_DIR}/qtk_app.vcxproj.user")
         file(WRITE ${VSUSER_FILE} "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
         file(APPEND ${VSUSER_FILE} "<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n")
         file(APPEND ${VSUSER_FILE} "  <PropertyGroup>\n")
@@ -137,11 +137,11 @@ set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 # https://nsis.sourceforge.io/Reference/CreateShortCut
 set(
     CPACK_NSIS_CREATE_ICONS_EXTRA
-    "CreateShortCut '$SMPROGRAMS\\$STARTMENU_FOLDER\\Qtk.lnk' '$INSTDIR\\bin\\qtk_main.exe'"
+    "CreateShortCut '$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Qtk.lnk' '$INSTDIR\\\\bin\\\\qtk_app.exe'"
 )
 set(
     CPACK_NSIS_DELETE_ICONS_EXTRA
-    "Delete '$SMPROGRAMS\\$START_MENU\\Qtk.lnk'"
+    "Delete '$SMPROGRAMS\\\\$START_MENU\\\\Qtk.lnk'"
 )
 # TODO: Icons for NSIS installer.
 #set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
@@ -154,9 +154,8 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 #set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local/)
 
 # OSX
-# TODO: Fix OSX appbundle error.
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
-set(CPACK_BUNDLE_PLIST $<TARGET_BUNDLE_CONTENT_DIR:qtk_main>/Info.plist)
+set(CPACK_BUNDLE_PLIST $<TARGET_BUNDLE_CONTENT_DIR:qtk_app>/Info.plist)
 set(CPACK_BUNDLE_ICON ${QTK_OSX_ICONS})
 
 # Platform defaults for source bundles.

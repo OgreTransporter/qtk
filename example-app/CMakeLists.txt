@@ -65,6 +65,6 @@ set(
     examplewidget.cpp examplewidget.h
 )
 
-add_executable(example ${EXAMPLE_SOURCES})
-target_link_libraries(example PUBLIC Qt6::Widgets Qt6::OpenGLWidgets Qt6::Core)
-target_link_libraries(example PUBLIC Qtk::qtk_library)
+add_executable(example_app ${EXAMPLE_SOURCES})
+target_link_libraries(example_app PUBLIC Qt6::Widgets Qt6::OpenGLWidgets Qt6::Core)
+target_link_libraries(example_app PUBLIC Qtk::qtk_library)

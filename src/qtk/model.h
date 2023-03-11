@@ -58,7 +58,7 @@ namespace Qtk {
         loadModel(mModelPath);
       }
 
-      inline ~Model() override { mManager.remove(getName()); }
+      inline ~Model() override { mManager.remove(getName().c_str()); }
 
       /*************************************************************************
        * Public Methods
@@ -197,7 +197,7 @@ namespace Qtk {
       /** The directory this model and it's textures are stored. */
       std::string mDirectory {};
       /** File names for shaders and 3D model on disk. */
-      const char *mVertexShader, *mFragmentShader, *mModelPath;
+      std::string mVertexShader, mFragmentShader, mModelPath;
   };
 }  // namespace Qtk
 
