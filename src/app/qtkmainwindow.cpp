@@ -76,5 +76,5 @@ Qtk::QtkWidget * MainWindow::getQtkWidget(const QString & name) {
 
 void MainWindow::refreshScene(QString sceneName) {
   // TODO: Select TreeView using sceneName>
-  ui_->qtk__TreeView->updateView(getQtkWidget(sceneName)->getScene());
+  ui_->qtk__TreeView->updateView(getQtkWidget()->getScene());
 }

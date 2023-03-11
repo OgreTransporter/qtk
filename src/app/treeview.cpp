@@ -45,7 +45,7 @@ void Qtk::TreeView::updateView(const Qtk::Scene * scene) {
 void Qtk::TreeView::itemFocus(QTreeWidgetItem * item, int column) {
   QString name = item->text(column);
   auto scene =
-      MainWindow::getMainWindow()->getQtkWidget(mSceneName)->getScene();
+      MainWindow::getMainWindow()->getQtkWidget()->getScene();
   auto & transform = scene->getCamera().getTransform();
   auto object = scene->getObject(name);
   if (object == Q_NULLPTR) {

@@ -108,7 +108,13 @@ void QtkWidget::paintGL() {
 }
 
 void QtkWidget::setScene(Qtk::Scene * scene) {
-  delete mScene;
+  if (mScene != Q_NULLPTR) {
+    delete mScene;
+    connect(
+        scene, &Qtk::Scene::sceneUpdated, MainWindow::getMainWindow(),
+        &MainWindow::refreshScene);
+  }
+
   mScene = scene;
   if(mScene != Q_NULLPTR) {
     mConsole->setTitle(mScene->getSceneName());
