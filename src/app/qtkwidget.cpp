@@ -108,7 +108,7 @@ void QtkWidget::paintGL() {
 }
 
 void QtkWidget::setScene(Qtk::Scene * scene) {
-  if (mScene != Q_NULLPTR) {
+  if(mScene != Q_NULLPTR) {
     delete mScene;
     connect(
         scene, &Qtk::Scene::sceneUpdated, MainWindow::getMainWindow(),

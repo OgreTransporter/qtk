@@ -1,6 +1,5 @@
-
-This is an example application that is using the Qtk API to create custom Qt 
-OpenGL widgets. This is very similar to `QtkWidget` in the Qtk desktop 
+This is an example application that is using the Qtk API to create custom Qt
+OpenGL widgets. This is very similar to `QtkWidget` in the Qtk desktop
 application source code, but could be modified for different uses if needed.
 
 There are no camera controls supported in this example. The camera is fixed.
@@ -11,7 +10,8 @@ You can import your own models within `examplescene.cpp`, inside the
 are applied in `ExampleScene::update()`.
 
 The syntax for adding shapes and models is seen in the example below.
-This would result in a scene with a red cube and a miniature spartan model placed on top.
+This would result in a scene with a red cube and a miniature spartan model
+placed on top.
 
 ```C++
 void ExampleScene::init() {
@@ -44,7 +44,6 @@ void ExampleScene::update() {
 
 Other examples can be found in the source files for this example project.
 
-
 ## Build Instructions
 
 Currently, this application requires manual build and installation of Qtk.
@@ -58,7 +57,9 @@ cmake -S /path/to/qtk/example-app/ -B /path/to/qtk/example-app/build
 cmake --build /path/to/qtk/example-app/build
 ```
 
-If Qtk was not installed system-wide, we can set `QTK_PATH` to point to the custom installation directory.
+If Qtk was not installed system-wide, we can set `QTK_PATH` to point to the
+custom installation directory.
+
 ```bash
 cmake -S /path/to/qtk/example-app/ -B /path/to/qtk/example-app/build -DQTK_PATH=/path/to/qtk/install/
 cmake --build /path/to/qtk/example-app/build

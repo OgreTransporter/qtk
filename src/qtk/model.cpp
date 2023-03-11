@@ -200,7 +200,9 @@ ModelMesh Model::processMesh(aiMesh * mesh, const aiScene * scene) {
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
   }
 
-  return {vertices, indices, textures, mVertexShader.c_str(), mFragmentShader.c_str()};
+  return {
+      vertices, indices, textures, mVertexShader.c_str(),
+      mFragmentShader.c_str()};
 }
 
 ModelMesh::Textures Model::loadMaterialTextures(

@@ -195,9 +195,7 @@ namespace Qtk {
 
   class SceneEmpty : public Scene {
     public:
-      void init() override {
-        setSceneName("Empty Scene");
-      }
+      void init() override { setSceneName("Empty Scene"); }
 
       void draw() override { Scene::draw(); }
 

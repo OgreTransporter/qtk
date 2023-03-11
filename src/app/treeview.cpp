@@ -37,18 +37,18 @@ void Qtk::TreeView::updateView(const Qtk::Scene * scene) {
   mSceneName = scene->getSceneName();
   auto objects = scene->getObjects();
   for(const auto & object : objects) {
-    auto item = new QTreeWidgetItem(QStringList(QString(object->getName().c_str())));
+    auto item =
+        new QTreeWidgetItem(QStringList(QString(object->getName().c_str())));
     ui->treeWidget->insertTopLevelItem(0, item);
   }
 }
 
 void Qtk::TreeView::itemFocus(QTreeWidgetItem * item, int column) {
   QString name = item->text(column);
-  auto scene =
-      MainWindow::getMainWindow()->getQtkWidget()->getScene();
+  auto scene = MainWindow::getMainWindow()->getQtkWidget()->getScene();
   auto & transform = scene->getCamera().getTransform();
   auto object = scene->getObject(name);
-  if (object == Q_NULLPTR) {
+  if(object == Q_NULLPTR) {
     qDebug() << "Attempt to get non-existing object with name '" << name
              << "'\n";
   }

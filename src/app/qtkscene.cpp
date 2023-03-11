@@ -15,8 +15,7 @@ using namespace Qtk;
  * Constructors, Destructors
  ******************************************************************************/
 
-QtkScene::QtkScene(Qtk::Scene * scene) :
-    Qtk::SceneInterface(scene) {
+QtkScene::QtkScene(Qtk::Scene * scene) : Qtk::SceneInterface(scene) {
   setSceneName("Qtk Scene");
   getCamera().getTransform().setTranslation(0.0f, 0.0f, 20.0f);
   getCamera().getTransform().setRotation(-5.0f, 0.0f, 1.0f, 0.0f);
@@ -97,8 +96,8 @@ void QtkScene::init() {
   model->getTransform().setTranslation(2.0f, -1.0f, -5.0f);
   model->getTransform().scale(0.15f);
 
-  model =
-      addObject(new Qtk::Model("My scythe", ":/models/models/scythe/scythe.obj"));
+  model = addObject(
+      new Qtk::Model("My scythe", ":/models/models/scythe/scythe.obj"));
   model->getTransform().setTranslation(-6.0f, 0.0f, -10.0f);
   model->getTransform().rotate(-90.0f, 1.0f, 0.0f, 0.0f);
   model->getTransform().rotate(90.0f, 0.0f, 1.0f, 0.0f);
@@ -401,15 +400,13 @@ void QtkScene::draw() {
       "uLightPosition",
       MeshRenderer::getInstance("phongLight")->getTransform().getTranslation());
   mTestPhong->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   mTestPhong->releaseShaders();
   mTestPhong->draw();
 
   mTestAmbient->bindShaders();
   mTestAmbient->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   mTestAmbient->releaseShaders();
   mTestAmbient->draw();
 
@@ -422,8 +419,7 @@ void QtkScene::draw() {
                             ->getTransform()
                             .getTranslation());
   mTestDiffuse->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   mTestDiffuse->releaseShaders();
   mTestDiffuse->draw();
 
@@ -436,8 +432,7 @@ void QtkScene::draw() {
                             ->getTransform()
                             .getTranslation());
   mTestSpecular->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   mTestSpecular->releaseShaders();
   mTestSpecular->draw();
 }
@@ -455,8 +450,7 @@ void QtkScene::update() {
   auto alien = Model::getInstance("alienTest");
   alien->setUniform("uLight.position", position);
   alien->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   auto posMatrix = alien->getTransform().toMatrix();
   alien->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   alien->setUniform("uMVP.model", posMatrix);
@@ -470,8 +464,7 @@ void QtkScene::update() {
   auto spartan = Model::getInstance("spartanTest");
   spartan->setUniform("uLight.position", position);
   spartan->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   posMatrix = spartan->getTransform().toMatrix();
   spartan->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   spartan->setUniform("uMVP.model", posMatrix);
@@ -486,8 +479,7 @@ void QtkScene::update() {
       MeshRenderer::getInstance("testLight")->getTransform().getTranslation();
   phong->setUniform("uLight.position", position);
   phong->setUniform(
-      "uCameraPosition",
-      QtkScene::getCamera().getTransform().getTranslation());
+      "uCameraPosition", QtkScene::getCamera().getTransform().getTranslation());
   posMatrix = phong->getTransform().toMatrix();
   phong->setUniform("uMVP.normalMatrix", posMatrix.normalMatrix());
   phong->setUniform("uMVP.model", posMatrix);
