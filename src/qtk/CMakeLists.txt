@@ -77,6 +77,3 @@ endif()
 if(WIN32)
   target_link_libraries(qtk_library PUBLIC OpenGL::GL)
 endif()
-
-#install(SCRIPT ${LIBQTK_DEPLOY_SCRIPT} COMPONENT libqtk)
-## Install qtk_library to Qt Designer to support widget plugins.

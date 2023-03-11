@@ -79,8 +79,6 @@ set(QT_INSTALL_DIR "$ENV{HOME}/Qt/6.5.0/gcc_64" CACHE PATH "Path to Qt6 install.
 # Point CMAKE_PREFIX_PATH to Qt6 install directory
 # If Qtk is built within Qt Creator this is not required.
 list(APPEND CMAKE_PREFIX_PATH "${QT_INSTALL_DIR}")
-# TODO: Remove if not using sdlibdeps.
-#set(CMAKE_INSTALL_RPATH "${QT_INSTALL_DIR}/lib")
 if (QTK_PREFIX_QTCREATOR)
   # TODO: This might be a bit strange and needs more testing.
   set(CMAKE_INSTALL_PREFIX  "${QT_INSTALL_DIR}")

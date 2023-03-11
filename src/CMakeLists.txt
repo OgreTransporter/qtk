@@ -45,14 +45,14 @@ if(QTK_INSTALL_PLUGINS)
   # Optionally install custom Qtk plugins for Qt Designer.
   install(
       TARGETS qtk_library qtk_plugin_library
-      COMPONENT qtk_collection
+      COMPONENT collection
       LIBRARY DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
       ARCHIVE DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
       RUNTIME DESTINATION "${QTK_PLUGIN_LIBRARY_DIR}"
   )
   install(
       TARGETS qtk_collection
-      COMPONENT qtk_collection
+      COMPONENT collection
       LIBRARY DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
       ARCHIVE DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
       RUNTIME DESTINATION "${QTK_PLUGIN_INSTALL_DIR}"
@@ -147,10 +147,8 @@ set(
 #set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/resources/icon.png")
 
 # Debian
-# TODO: Fix output sharedlib path.
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE ${CPACK_PACKAGE_HOMEPAGE_URL})
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-#set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local/)
 
 # OSX
 set(CPACK_BUNDLE_NAME ${PROJECT_NAME})
