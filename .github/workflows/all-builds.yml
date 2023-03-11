@@ -70,6 +70,19 @@ jobs:
         shell: bash
         run: cmake --build build/ --target package --config Release
 
+      - name: Package Qtk Library (DEB)
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: cpack -C Release -G DEB
+
+      - name: Upload package artifacts (DEB)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: qtk-${{ matrix.os }}-debian
+          path: |
+            build/packages/*.deb
+
       - name: Upload Qtk install directory
         uses: actions/upload-artifact@v3
         with:
@@ -155,6 +168,19 @@ jobs:
         shell: bash
         run: cmake --build build/ --target package --config Release
 
+      - name: Package Qtk Library (DEB)
+        if: matrix.os == 'ubuntu-latest'
+        shell: bash
+        run: cpack -C Release -G DEB
+
+      - name: Upload package artifacts (DEB)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: libqtk-${{ matrix.os }}-debian
+          path: |
+            build/packages/*.deb
+
       - name: Upload libqtk install
         uses: actions/upload-artifact@v3
         if: always()
@@ -169,6 +195,7 @@ jobs:
           name: libqtk-packages-${{ matrix.os }}
           path: |
             build/packages/
+            !build/packages/*.deb
             !build/packages/_CPack_Packages/*
 
   Build-Qtk-Plugins:
