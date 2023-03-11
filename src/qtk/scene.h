@@ -166,7 +166,6 @@ namespace Qtk {
        */
       inline void setSceneName(QString name) { mSceneName = std::move(name); }
 
-      std::vector<Model *> mModels {};
     signals:
       /**
        * Signal thrown when the scene is modified by adding or removing objects.
@@ -191,6 +190,7 @@ namespace Qtk {
       /* MeshRenderers used simple geometry. */
       std::vector<MeshRenderer *> mMeshes {};
       /* Models used for storing 3D models in the scene. */
+      std::vector<Model *> mModels {};
   };
 
   class SceneEmpty : public Scene {

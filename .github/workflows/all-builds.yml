@@ -58,13 +58,13 @@ jobs:
       - name: Build Qtk Application (OSX / Linux)
         if: matrix.os != 'windows-latest'
         shell: bash
-        run: cmake --build build/ --config Release --target qtk_main -- -j $(nproc)
+        run: cmake --build build/ --config Release --target qtk_app -- -j $(nproc)
 
       # Packaging
 
       - name: Install Qtk Application
         shell: bash
-        run: cmake --install build/ --config Release --prefix=$(pwd)/install --component qtk_main
+        run: cmake --install build/ --config Release --prefix=$(pwd)/install --component qtk_app
 
       - name: Package Qtk Application
         shell: bash
