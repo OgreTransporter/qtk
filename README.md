@@ -48,6 +48,48 @@ your system, **version 6.5.0** or later.
 Be sure to take note of the Qt6 installation directory, as we will need it to
 correctly set our `CMAKE_PREFIX_PATH` in the next steps.
 
+If the build is configured with all options enabled, we can subsequently install
+individual components as needed with cmake.
+
+```bash
+cmake -B build-all/ -DQTK_BUILD_GUI=ON -DQTK_INSTALL_LIBRARY=ON -DQTK_INSTALL_PLUGINS=ON
+```
+
+```bash
+# Install libqtk only
+cmake --install build-all/ --prefix=$(pwd)/install --component libqtk
+-- Install configuration: "Release"
+-- Up-to-date: /home/shaun/Code/qtk/install/lib/cmake/Qtk/QtkConfig.cmake
+-- Up-to-date: /home/shaun/Code/qtk/install/lib/cmake/Qtk/QtkConfigVersion.cmake
+-- Up-to-date: /home/shaun/Code/qtk/install/lib/cmake/Qtk/QtkTargets.cmake
+-- Up-to-date: /home/shaun/Code/qtk/install/lib/cmake/Qtk/QtkTargets-release.cmake
+-- Up-to-date: /home/shaun/Code/qtk/install/lib/static/libqtk_library.a
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/camera3d.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/input.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/meshrenderer.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/model.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/modelmesh.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/object.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/qtkapi.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/qtkiostream.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/qtkiosystem.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/scene.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/shape.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/skybox.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/texture.h
+-- Up-to-date: /home/shaun/Code/qtk/install/include/qtk/transform3D.h
+
+# Install Qtk widget collection to use Qt Designer
+cmake --install build-all/ --prefix=$(pwd)/install --component collection
+-- Install configuration: "Release"
+-- Up-to-date: /home/shaun/Qt/6.5.0/gcc_64/../../Tools/QtCreator/lib/Qt/lib/libqtk_library.a
+-- Up-to-date: /home/shaun/Qt/6.5.0/gcc_64/../../Tools/QtCreator/lib/Qt/lib/libqtk_plugin_library.a
+-- Up-to-date: /home/shaun/Qt/6.5.0/gcc_64/../../Tools/QtCreator/lib/Qt/plugins/designer/libqtk_collection.so
+
+# Install Qtk desktop application (output removed)
+cmake --install build-all/ --prefix=$(pwd)/install --component qtk
+```
+
 #### Qtk GUI
 
 Once Qt6 is installed, to build and run `qtk` on Ubuntu -

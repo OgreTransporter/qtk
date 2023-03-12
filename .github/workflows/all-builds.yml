@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: cmake --build build/ --target package --config Release
 
-      - name: Package Qtk Library (DEB)
+      - name: Package Qtk (DEB)
         if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: |
@@ -87,11 +87,11 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-debian
+          name: qtk-app-${{ matrix.os }}
           path: |
             build/packages/*.deb
 
-      - name: Package Qtk Library (WIN)
+      - name: Package Qtk (WIN)
         if: matrix.os == 'windows-latest'
         shell: bash
         run: |
@@ -102,11 +102,11 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-windows
+          name: qtk-app-${{ matrix.os }}
           path: |
             build/packages/*.exe
 
-      - name: Package Qtk Library (OSX)
+      - name: Package Qtk (OSX)
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
@@ -117,14 +117,14 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-macos
+          name: qtk-app-${{ matrix.os }}
           path: |
             build/packages/*.tar.gz
 
       - name: Upload Qtk install directory
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-install
+          name: qtk-app-${{ matrix.os }}-install
           path: install/*
 
 # TODO: Enable after trimming resources.
@@ -217,7 +217,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: libqtk-${{ matrix.os }}-debian
+          name: libqtk-${{ matrix.os }}
           path: |
             build/packages/*.deb
 
@@ -232,7 +232,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-windows
+          name: qtk-${{ matrix.os }}
           path: |
             build/packages/*.exe
 
@@ -247,7 +247,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v3
         with:
-          name: qtk-${{ matrix.os }}-macos
+          name: qtk-${{ matrix.os }}
           path: |
             build/packages/*.tar.gz
 
